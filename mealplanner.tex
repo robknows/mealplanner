@@ -1,0 +1,70 @@
+\documentclass[a4paper]{article}
+
+%% Language and font encodings
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsthm}
+\usepackage{textcomp}
+
+%% Sets page size and margins
+\usepackage[a4paper,top=3cm,bottom=2cm,left=2cm,right=2cm,marginparwidth=1.75cm]{geometry}
+
+%% Useful packages
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+\usepackage{indentfirst}
+
+% set up BNF generator
+\usepackage{syntax}
+\setlength{\grammarparsep}{10pt plus 1pt minus 1pt}
+\setlength{\grammarindent}{10em}
+
+\title{Meal Planning}
+\author{Rob Moore}
+
+\begin{document}
+\maketitle
+
+\section{Goals}
+
+\subsection{Every day}
+
+\begin{itemize}
+  \item 3 meals
+  \item 3000 calories
+  \item 360g carbohydrate
+  \item 100g protein
+  \item 130g fat
+  \item 600g food total
+  \item Eat less than £10 worth of food NB. This will change once I find what a reasonable value for it is.
+\end{itemize}
+
+\subsection{Solution-independent Specification}
+
+Breakfast must be made from at least 2 ingredients and must have at least:
+\begin{itemize}
+  \item 140g carbohydrate
+  \item 10g protein
+  \item 20g fat
+\end{itemize}
+
+Lunch must be made from at least 3 ingredients and must have at least:
+\begin{itemize}
+  \item 150g carbohydrate
+  \item 40g protein
+  \item 50g fat
+\end{itemize}
+
+Dinner must be made from at least 3 ingredients and must have at least:
+\begin{itemize}
+  \item 70g carbohydrate
+  \item 50g protein
+  \item 60g fat
+\end{itemize}
+
+\section{Required Function of the Program}
+
+\end{document}
