@@ -23,14 +23,14 @@
 \setlength{\grammarindent}{10em}
 
 \title{Meal Planning}
-\author{Rob Moore}
+\author{Rob Moore - started 2017.01.26}
 
 \begin{document}
 \maketitle
 
-\section{Goals}
+\section{Solution-independent Specification}
 
-\subsection{Every day}
+\subsection{Daily specification}
 
 \begin{itemize}
   \item 3 meals
@@ -42,7 +42,7 @@
   \item Eat less than £10 worth of food NB. This will change once I find what a reasonable value for it is.
 \end{itemize}
 
-\subsection{Solution-independent Specification}
+\subsection{Meal specification}
 
 Breakfast must be made from at least 2 ingredients and must have at least:
 \begin{itemize}
@@ -66,5 +66,50 @@ Dinner must be made from at least 3 ingredients and must have at least:
 \end{itemize}
 
 \section{Required Function of the Program}
+
+\subsection{Meal}
+
+A user of the program must be able to request a meal by giving it's name 
+to the program on the command line, such as:
+
+\begin{verbatim}
+  ./mealplanner breakfast
+\end{verbatim}
+
+When a meal is specified, the following things should be shown:
+
+\begin{itemize}
+  \item List of foods for the meal
+  \item Number of calories(N/A) in the meal
+  \item Macronutrient(g) breakdown of the given meal
+  \item Number of grams of food in the meal in total
+  \item Cost(£) of buying each item in the meal from the shop
+\end{itemize}
+
+The foods returned must conform to all of the specification 
+requirements. Furthermore, it must check the appropriateness of each 
+food ie. Milk, cornflakes and toast for dinner is not a good suggestion.
+
+\subsection{Day}
+
+Furthermore, if the program is called without arguments, it should 
+behave as though breakfast, lunch and dinner were all requested, giving 
+meals for the whole day.
+
+When giving results in this form, the meal plan must also be checked for 
+conformity to daily requirements for total(g), macronutrient(g) and 
+calorie(N/A) consumption.
+
+\subsection{User Interface}
+
+When calling the program, after the output is given a prompt should 
+appear to ask if the user is satisfied with the result. By typing "y" or 
+"n" and pressing enter, the user can submit this.
+
+If the user is not happy with the given result, the computer should 
+compute a different meal and again poll it's success with the user. This 
+cycle continues until either all meals composable under the given 
+information are exhausted, or the user is shown a meal they are happy 
+with.
 
 \end{document}
