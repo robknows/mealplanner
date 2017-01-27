@@ -112,4 +112,85 @@ cycle continues until either all meals composable under the given
 information are exhausted, or the user is shown a meal they are happy 
 with.
 
+\section{Algorithm}
+
+The program will attempt to find solutions with the fewest number of 
+ingredients first.
+
+Given a dataset A, for a 2 ingredient problem (breakfast), we can use 
+the following algorithm to find ingredients X and Y, given carbohydrate, 
+protein and fat threshholds of Tc, Tp and Tf respectively.
+
+\subsection{Two Ingredient Solution}
+
+\begin{enumerate}
+  \item Filter A to show only foods appropriate for breakfast
+
+  \item Choose arbitrary X from A
+
+  \item Let D = T - X. That is, Dc = Tc - Xc, Dp = Tp - Xp, Df - Tf - Xf.
+
+  \item New filtering function is therefore \begin{verbatim} {all[x >= D]} \end{verbatim}
+
+  \item Apply the filter to A, and let the result by Ad
+
+  \item Add to the solution set the 2 ingredient solutions, found by \begin{verbatim} X cross Ad \end{verbatim}
+
+  \item Recurse, removing X from A, until A has only one element left.
+
+  \item Return the solution set
+\end{enumerate}
+
+\subsection{Three Ingredient Solution}
+
+\begin{enumerate}
+  \item For every element in A, go to every other point. Do this one more time.
+  \item Boom. O($n^{3}$) algorithm.
+\end{enumerate}
+
+I consider this to be okay because a local shop inventory database is 
+never going to be large enough that this gets out of hand.
+
+\section{Table}
+
+\subsection{Spending}
+
+Information about things I buy at the shops, rather than what I cook in the 
+kitchen.
+
+\begin{itemize}
+  \item name (string)
+  \item boughtfrom (string)
+  \item price(£) (float)
+  \item nServings (int)
+  \item servingDescription (string)
+  \item inmeals (bool list)
+\end{itemize}
+
+\subsection{GivenStats}
+
+Statistics about the food I can see straight from the packet of food.
+
+\begin{itemize}
+  \item name (string)
+  \item nGrams (int)
+  \item calsP100g (int)
+  \item gcarbsP100g (int)
+  \item gproteinP100g (int)
+  \item gfatP100g (int)
+\end{itemize} 
+  
+\subsection{Nutrition}
+
+Information to do with a food's nutritional value at serving time.
+
+\begin{itemize}
+  \item name (string)
+  \item calsPserving (float)
+  \item gcarbsPserving (float)
+  \item gproteinPserving (float)
+  \item gfatPserving (float)
+  \item gtotalPserving (float)
+\end{itemize}
+
 \end{document}
