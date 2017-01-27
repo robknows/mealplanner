@@ -159,8 +159,8 @@ Information about things I buy at the shops, rather than what I cook in the
 kitchen.
 
 \begin{itemize}
-  \item name (string)
-  \item boughtfrom (string)
+  \item name (symbol)
+  \item boughtfrom (symbol)
   \item price(£) (float)
   \item nServings (int)
   \item servingDescription (string)
@@ -172,7 +172,7 @@ kitchen.
 Statistics about the food I can see straight from the packet of food.
 
 \begin{itemize}
-  \item name (string)
+  \item name (symbol)
   \item nGrams (int)
   \item calsP100g (int)
   \item gcarbsP100g (int)
@@ -185,12 +185,12 @@ Statistics about the food I can see straight from the packet of food.
 Information to do with a food's nutritional value at serving time.
 
 \begin{itemize}
-  \item name (string)
+  \item name (symbol)
+  \item gtotalPserving (float)
   \item calsPserving (float)
   \item gcarbsPserving (float)
   \item gproteinPserving (float)
   \item gfatPserving (float)
-  \item gtotalPserving (float)
 \end{itemize}
 
 \end{document}
