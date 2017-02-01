@@ -10,9 +10,9 @@ if[not input in meals;"Input must be one of breakfast lunch dinner.\n";exit 1]
 
 reqs: ([meal:meals] 
   i: 0 1 2;
-  carbsreq: 80 90 50; 
-  proteinreq: 10 40 50; 
-  fatreq: 20 40 50)
+  carbsreq: 60 70 50; 
+  proteinreq: 5 40 50; 
+  fatreq: 5 20 40)
 
 carbsreq: (reqs input)[`carbsreq]
 proteinreq: (reqs input)[`proteinreq]
