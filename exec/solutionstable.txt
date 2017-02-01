@@ -1,4 +1,0 @@
-ingredients	gtotal	cals	carbs	protein	fat
-porkribs,beanscan,beanscan	1235	1863.45	70.955	147.115	81.67
-porkribs,beanscan,beefraviolican	1215	1810.45	71.675	141.455	82.35
-porkribs,beefraviolican,beefraviolican	1195	1757.45	72.395	135.795	83.03

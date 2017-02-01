@@ -3,13 +3,16 @@
 nutrition: value`:../tables/nutrition
 spending: value`:../tables/spending
 
-input: `dinner
+input: first "S"$.z.x
 
-reqs: ([meal:`breakfast`lunch`dinner] 
+meals:`breakfast`lunch`dinner
+if[not input in meals;"Input must be one of breakfast lunch dinner.\n";exit 1]
+
+reqs: ([meal:meals] 
   i: 0 1 2;
-  carbsreq: 140 150 70; 
+  carbsreq: 80 90 50; 
   proteinreq: 10 40 50; 
-  fatreq: 20 50 60)
+  fatreq: 20 40 50)
 
 carbsreq: (reqs input)[`carbsreq]
 proteinreq: (reqs input)[`proteinreq]
@@ -76,4 +79,4 @@ solutionstable: ([]
 
 save `:solutionstable.txt
 
-\\
+exit 0
