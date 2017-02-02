@@ -44,7 +44,7 @@
 
 \subsection{Meal specification}
 
-Breakfast must be made from at least 2 ingredients and must have at least:
+Breakfast must be made from at least 2 ingredients and must have at least (dummy values for now):
 \begin{itemize}
   \item 140g carbohydrate
   \item 10g protein
@@ -69,7 +69,7 @@ Dinner must be made from at least 3 ingredients and must have at least:
 
 \subsection{Meal}
 
-A user of the program must be able to request a meal by giving it's name 
+A user of the program must be able to request suggestions for a meal by giving it's name 
 to the program on the command line, such as:
 
 \begin{verbatim}
@@ -99,18 +99,6 @@ meals for the whole day.
 When giving results in this form, the meal plan must also be checked for 
 conformity to daily requirements for total(g), macronutrient(g) and 
 calorie(N/A) consumption.
-
-\subsection{User Interface}
-
-When calling the program, after the output is given a prompt should 
-appear to ask if the user is satisfied with the result. By typing "y" or 
-"n" and pressing enter, the user can submit this.
-
-If the user is not happy with the given result, the computer should 
-compute a different meal and again poll it's success with the user. This 
-cycle continues until either all meals composable under the given 
-information are exhausted, or the user is shown a meal they are happy 
-with.
 
 \section{Algorithm}
 
