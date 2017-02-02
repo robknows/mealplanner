@@ -3,10 +3,12 @@
 spending: value`:tables/spending
 givenstats: value`:tables/givenstats
 
-names: exec name from givenstats
-extendablespendstats: select from spending where name in names
+names: exec name from spending
+namesB: exec name from givenstats
 
-gtotalPservings: (1 % (exec nServings from extendablespendstats)) * (exec nGrams from givenstats)
+if[not {(count x) = count y}[names;namesB]; 1 "spending & givenstats key doesn't match up. Fix before deploying nutrition."; exit 1]
+
+gtotalPservings: (1 % (exec nServings from spending)) * (exec nGrams from givenstats)
 calsPservings: (exec calsP100g from givenstats) * 0.01 * gtotalPservings
 gcarbsPservings: (exec gcarbsP100g from givenstats) * 0.01 * gtotalPservings
 gproteinPservings: (exec gproteinP100g from givenstats) * 0.01 * gtotalPservings
