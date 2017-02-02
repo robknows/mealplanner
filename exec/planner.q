@@ -10,9 +10,9 @@ if[not input in meals;"Input must be one of breakfast lunch dinner.\n";exit 1]
 
 reqs: ([meal:meals] 
   i: 0 1 2;
-  carbsreq: 60 70 50; 
-  proteinreq: 5 40 50; 
-  fatreq: 5 20 40)
+  carbsreq: 70 80 50; 
+  proteinreq: 10 40 50; 
+  fatreq: 10 50 70)
 
 carbsreq: (reqs input)[`carbsreq]
 proteinreq: (reqs input)[`proteinreq]
@@ -32,7 +32,6 @@ filter: {y where x each y}
 checkcarbs: {<[x;sum (nutrition y)[`gcarbsPserving]]}
 checkprotein: {<[x;sum (nutrition y)[`gproteinPserving]]}
 checkfat: {<[x;sum (nutrition y)[`gfatPserving]]}
-applyallfilters: {filter[checkfat] filter[checkprotein] filter[checkcarbs] x}
 
 applyallfilters2i: {
   filter[checkfat[fatreq - maxfat]] 
