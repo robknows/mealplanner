@@ -44,26 +44,30 @@
 
 \subsection{Meal specification}
 
-Breakfast must be made from at least 2 ingredients and must have at least (dummy values for now):
 \begin{itemize}
-  \item 140g carbohydrate
-  \item 10g protein
-  \item 20g fat
+  \item 70g carbohydrate
+  \item 5g protein
+  \item 5g fat
 \end{itemize}
 
-Lunch must be made from at least 3 ingredients and must have at least:
 \begin{itemize}
-  \item 150g carbohydrate
+  \item 80g carbohydrate
   \item 40g protein
   \item 50g fat
 \end{itemize}
 
-Dinner must be made from at least 3 ingredients and must have at least:
 \begin{itemize}
-  \item 70g carbohydrate
+  \item 50g carbohydrate
   \item 50g protein
-  \item 60g fat
+  \item 50g fat
 \end{itemize}
+
+Additionally, all meals must have 3 different solid foods in them. Milk 
+is considered a given for every meal, and hence the fat and protein 
+values may be lower than they actually need to be.
+
+Since at this stage the solutions are only suggestions, they need not be 
+exhaustive, and I can decide for myself from the results what to eat.
 
 \section{Required Function of the Program}
 
@@ -102,39 +106,8 @@ calorie(N/A) consumption.
 
 \section{Algorithm}
 
-The program will attempt to find solutions with the fewest number of 
-ingredients first.
-
-Given a dataset A, for a 2 ingredient problem (breakfast), we can use 
-the following algorithm to find ingredients X and Y, given carbohydrate, 
-protein and fat threshholds of Tc, Tp and Tf respectively.
-
-\subsection{Two Ingredient Solution}
-
-\begin{enumerate}
-  \item Filter A to show only foods appropriate for breakfast
-
-  \item Choose arbitrary X from A
-
-  \item Let D = T - X. That is, Dc = Tc - Xc, Dp = Tp - Xp, Df - Tf - Xf.
-
-  \item New filtering function is therefore \begin{verbatim} {all[x >= D]} \end{verbatim}
-
-  \item Apply the filter to A, and let the result by Ad
-
-  \item Add to the solution set the 2 ingredient solutions, found by \begin{verbatim} X cross Ad \end{verbatim}
-
-  \item Recurse, removing X from A, until A has only one element left.
-
-  \item Return the solution set
-\end{enumerate}
-
-\subsection{Three Ingredient Solution}
-
-\begin{enumerate}
-  \item For every element in A, go to every other point. Do this one more time.
-  \item Boom. O($n^{3}$) algorithm.
-\end{enumerate}
+A simple O($n^{3}$) search with optimisations at intermediate steps suffices 
+for this problem.
 
 I consider this to be okay because a local shop inventory database is 
 never going to be large enough that this gets out of hand.
