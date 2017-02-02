@@ -1,0 +1,10 @@
+#!/bin/bash
+
+cd exec
+./planner.q $1
+./presentsolutions.ijs solutionstable.txt
+cat solutionstable.txt
+rm solutionstable.txt
+cd ..
+
+exit 0
