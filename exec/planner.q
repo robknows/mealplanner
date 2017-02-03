@@ -1,12 +1,13 @@
 #!/home/rob/q/l32/q
 
-nutrition: value`:../tables/nutrition
 spending: value`:../tables/spending
+nutrition: value`:../tables/nutrition
+cost: value`:../tables/cost
 
 input: first "S"$.z.x
 
 meals:`breakfast`lunch`dinner
-if[not input in meals;"Input must be one of breakfast lunch dinner.\n";exit 1]
+if[not input in meals;1 "\nInput must be one of breakfast lunch dinner.\n";exit 1]
 
 reqs: ([meal:meals] 
   i: 0 1 2;
@@ -65,10 +66,16 @@ solprotein: sumquantity[`gproteinPserving]
 solfat: sumquantity[`gfatPserving]
 
 fromsolutions: {x each solutions}
-presentsymbols: {sv[","] string x}
-ingredients: presentsymbols each fromsolutions solingredients
+ingredientsols: fromsolutions solingredients
 
-solutionstable: ([] 
+mealprice: {exec sum pricePserving from (cost each x)}
+mealprices: mealprice each ingredientsols
+
+presentsymbols: {sv[","] string x}
+ingredients: presentsymbols each ingredientsols
+
+solutionstable: asc ([] 
+  price: mealprices;
   ingredients: ingredients;
   gtotal: fromsolutions solgtotal; 
   cals: fromsolutions solcals; 

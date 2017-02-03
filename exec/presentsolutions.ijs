@@ -19,13 +19,14 @@ NB. x=A stringified table whose columns are seperated by tabs on each row
 NB. y=number of the column you want
 tablecol =: 4 : '(col&y)"1 x'
 
+NB. indices is the following group of boxed 2-element lists:
 NB. 
-NB. 00 01 02 03 04 05
-NB. 10 11 12 13 14 15
-NB. 20 21 22 23 24 25
+NB. 00 01 02 03 04 05 ..
+NB. 10 11 12 13 14 15 ..
+NB. 20 21 22 23 24 25 ..
 NB. ...
 NB.
-ncols =: 6
+ncols =: >: ((0{lines) +/@:e. (9{a.))
 nrows =: #lines
 dimensions =: nrows , ncols
 indices =: ;/"2 ((dimensions$ncols#i.nrows) ;"1@:;"0 (dimensions$i.ncols))
