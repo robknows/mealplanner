@@ -1,7 +1,7 @@
 #!/home/rob/q/l32/q
 
-spending: value`:tables/spending
-givenstats: value`:tables/givenstats
+spending: value`:../tables/spending
+givenstats: value`:../tables/givenstats
 
 names: exec name from spending
 namesB: exec name from givenstats
@@ -21,6 +21,6 @@ nutrition: ([name: names]
   gproteinPserving: gproteinPservings;
   gfatPserving: gfatPservings)
 
-save `:tables/nutrition
+save `:../tables/nutrition
 
 \\
