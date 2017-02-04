@@ -84,5 +84,7 @@ solutionstable: asc ([]
   fat: fromsolutions solfat)
 
 save `:solutionstable.txt
+lastsolutions: solutionstable
+save `:../tables/lastsolutions
 
 exit 0
