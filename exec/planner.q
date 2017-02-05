@@ -74,7 +74,7 @@ mealprices: mealprice each ingredientsols
 presentsymbols: {sv[","] string x}
 ingredients: presentsymbols each ingredientsols
 
-solutionstable: asc ([] 
+solutionstable: ([]
   price: mealprices;
   ingredients: ingredients;
   gtotal: fromsolutions solgtotal; 
@@ -82,6 +82,12 @@ solutionstable: asc ([]
   carbs: fromsolutions solcarbs; 
   protein: fromsolutions solprotein; 
   fat: fromsolutions solfat)
+
+/
+Select the solutions which have either 0 or 1 cans. (Canned food isn't good)
+This is an inefficient way of doing this. Will find a better way soon. TODO.
+\
+solutionstable: asc select from solutionstable where 2 > {count ss[x;"can"]} each ingredients
 
 save `:solutionstable.txt
 lastsolutions: solutionstable

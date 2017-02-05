@@ -1,4 +1,4 @@
-\c 25 100
+\c 25 120
 
 spending: value`:tables/spending
 givenstats: value`:tables/givenstats
