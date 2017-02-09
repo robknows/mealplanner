@@ -83,13 +83,13 @@ solutionstable: ([]
   protein: fromsolutions solprotein; 
   fat: fromsolutions solfat)
 
-occurances: {count ss[y;x]}
+occurrences: {count ss[y;x]}
 
 /
 Select the solutions which have either 0 or 1 cans. (Canned food isn't good)
 This is an inefficient way of doing this. Will find a better way soon. TODO.
 \
-solutionstable: asc select from solutionstable where 2 > occurances["can"] each ingredients
+solutionstable: asc select from solutionstable where 2 > occurrences["can"] each ingredients
 
 save `:solutionstable.txt
 lastsolutions: solutionstable
