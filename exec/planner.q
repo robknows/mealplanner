@@ -66,17 +66,22 @@ solprotein: sumquantity[`gproteinPserving]
 solfat: sumquantity[`gfatPserving]
 
 fromsolutions: {x each solutions}
+
 ingredientsols: fromsolutions solingredients
 
-mealprice: {exec sum pricePserving from (cost each x)}
-mealprices: mealprice each ingredientsols
-
 presentsymbols: {sv[","] string x}
+
 ingredients: presentsymbols each ingredientsols
+
+mealprices: {exec sum pricePserving from (cost each x)} each ingredientsols
+shopsols: {exec distinct boughtfrom from (spending each x)} each ingredientsols
+
+shops: presentsymbols each shopsols
 
 solutionstable: ([]
   price: mealprices;
   ingredients: ingredients;
+  requiredshops: shops;
   gtotal: fromsolutions solgtotal; 
   cals: fromsolutions solcals; 
   carbs: fromsolutions solcarbs; 
