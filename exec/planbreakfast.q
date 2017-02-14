@@ -4,6 +4,10 @@ cost: value`:../tables/cost
 
 breakfastfoodtypes: `cereal`side`bread
 
+carbsreq: 70
+proteinreq: 10
+fatreq: 10
+
 spending: select from spending where foodtype in breakfastfoodtypes
 groupedbyfoodtype: `foodtype xgroup spending
 breakfastfoodnames: exec name from spending
@@ -32,9 +36,9 @@ macrosfilter: {[tf;reqf;l]
   asXbs: tf flip l;
   where reqf asXbs}
 
-breakfast_carbsfilter:   macrosfilter[sum;{x > 70}]
-breakfast_proteinfilter: macrosfilter[sum;{x > 10}]
-breakfast_fatfilter:     macrosfilter[sum;{x > 10}]
+breakfast_carbsfilter:   macrosfilter[sum;{x > carbsreq}]
+breakfast_proteinfilter: macrosfilter[sum;{x > proteinreq}]
+breakfast_fatfilter:     macrosfilter[sum;{x > fatreq}]
 
 /
 We must now traverse back through our solutions to convert the FPIS

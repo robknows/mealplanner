@@ -22,7 +22,7 @@ Fix up the columns with symbols so that they are presentable strings
   (Q is not happy to save symbol lists to a .txt file)
 \
 presentsymbols: {sv[","] string x}
-update ingredients: presentsymbols each ingredients,requiredshops: presentsymbols each requiredshops from `solutions
+update ingredients: presentsymbols each ingredients,requiredshops: presentsymbols each requiredshops from `solutions;
 
 save `:solutions.txt
 lastsolutions: solutions

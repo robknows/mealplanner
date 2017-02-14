@@ -4,9 +4,9 @@ cost: value`:../tables/cost
 
 lunchfoodtypes: `meat`healthy`staple`bread`canned
 
-carbsreq: 60
-proteinreq: 30
-fatreq: 30
+carbsreq: 75
+proteinreq: 40
+fatreq: 50
 
 spending: select from spending where foodtype in lunchfoodtypes
 groupedbyfoodtype: `foodtype xgroup spending
@@ -32,11 +32,27 @@ Triple the used values for bread nutrition because in a meal I would
 
   The last 2 lines here are just moving name to be the first column
     solely to satisfy my need for the 'name' column to go first.
+
+  This applies specifically to things which have "bread" in their name,
+    because bagels are much larger than slices of bread, so I probably
+    wouldn't eat 3 or 4 of them.
+
+  The code below uses a funtional update.
+    annotatetripled&make3x_aggregates are there to create a dictionary
+    which indicates application of `triple to them.
+
+  The four arguments of the actual update (![`breads;...]) are:
+    `breads                                               :: table name
+    enlist ({0 < count ss[;"bread"] string x} each;`name) :: selection condition ie. only the ones which have 'bread' in their name
+    0b                                                    :: ???
+    make3x_aggregates 1_cols breads                       :: dictionary for the tripling of the numeric columns. (1_ is to leave out 'name')
+
 \
-triple: {3*x}
-breads: update name: breads[`name] from (flip `gtotalPserving`calsPserving`gcarbsPserving`gproteinPserving`gfatPserving ! {triple breads x} each `gtotalPserving`calsPserving`gcarbsPserving`gproteinPserving`gfatPserving)
-`name xkey `breads;
-breads: 0!breads
+nSlicesPmeal: 4
+scalebreads: {nSlicesPmeal * x}
+annotatetripled: {(`scalebreads;x)}
+make3x_aggregates: {x ! annotatetripled each x}
+![`breads;enlist ({0 < count ss[;"bread"] string x} each;`name);0b;make3x_aggregates 1_cols breads]
 
 /
 Returns the result of AS.FIELD cross BS.FIELD
@@ -137,4 +153,21 @@ mxhxs_solution: gensolution `staples
 mxhxb_solution: gensolution `breads
 mxhxc_solution: gensolution `canneds
 
-solutions: mxhxs_solution , mxhxb_solution , mxhxc_solution
+lunchsolutions: mxhxs_solution , mxhxb_solution , mxhxc_solution
+
+price: {exec sum pricePserving from cost where name in x} each lunchsolutions
+ingredients: lunchsolutions
+requiredshops: {exec distinct boughtfrom from spending where name in x} each lunchsolutions
+nutritionstats: {exec sum gtotalPserving,sum calsPserving,sum gcarbsPserving,sum gproteinPserving,sum gfatPserving from nutrition where name in x} each lunchsolutions
+
+solutionstable: ([]
+  price: price;
+  ingredients: ingredients;
+  requiredshops: requiredshops;
+  gtotal: nutritionstats `gtotalPserving;
+  cals: nutritionstats `calsPserving;
+  gcarbs: nutritionstats `gcarbsPserving;
+  gprotein: nutritionstats `gproteinPserving;
+  gfat: nutritionstats `gfatPserving)
+
+planlunch: {solutionstable}
