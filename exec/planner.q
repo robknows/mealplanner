@@ -9,7 +9,7 @@ input: first "S"$.z.x
 meals:`breakfast`lunch`dinner
 if[not input in meals;1 "\nInput must be one of breakfast lunch dinner.\n";exit 1]
 
-plan: first (planbreakfast ; planlunch ; plandinner) where input=meals
+plan: first (.breakfast.plan ; .lunch.plan ; .dinner.plan) where input=meals
 
 /
 We can introduce a stochastic element here later using a random seed

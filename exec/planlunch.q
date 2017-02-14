@@ -2,27 +2,27 @@ spending: value`:../tables/spending
 nutrition: value`:../tables/nutrition
 cost: value`:../tables/cost
 
-lunchfoodtypes: `meat`healthy`staple`bread`canned
+.lunch.foodtypes: `meat`healthy`staple`bread`canned
 
-carbsreq: 75
-proteinreq: 40
-fatreq: 50
+.lunch.carbsreq: 75
+.lunch.proteinreq: 40
+.lunch.fatreq: 50
 
-spending: select from spending where foodtype in lunchfoodtypes
-groupedbyfoodtype: `foodtype xgroup spending
-lunchfoodnames: exec name from spending
-nutrition: select from nutrition where name in lunchfoodnames
-cost: select from cost where name in lunchfoodnames
+.lunch.spending:          select from spending  where foodtype in .lunch.foodtypes, {x 1} each inmeals
+.lunch.groupedbyfoodtype: `foodtype xgroup .lunch.spending
+.lunch.foodnames:    exec name from .lunch.spending
+.lunch.nutrition:         select from nutrition where name in .lunch.foodnames
+.lunch.cost:              select from cost      where name in .lunch.foodnames
 
-categorisednutrition: {
-  categorisednames: select name from groupedbyfoodtype where foodtype=x;
-  lj[ungroup categorisednames; nutrition]}
+.lunch.categorisednutrition: {
+  categorisednames: select name from .lunch.groupedbyfoodtype where foodtype=x;
+  lj[ungroup categorisednames; .lunch.nutrition]}
 
-meats: categorisednutrition `meat
-healthys: categorisednutrition `healthy
-staples: categorisednutrition `staple
-breads: categorisednutrition `bread
-canneds: categorisednutrition `canned
+lunch_meats:    .lunch.categorisednutrition `meat
+lunch_healthys: .lunch.categorisednutrition `healthy
+lunch_staples:  .lunch.categorisednutrition `staple
+lunch_breads:   .lunch.categorisednutrition `bread
+lunch_canneds:  .lunch.categorisednutrition `canned
 
 /
 Triple the used values for bread nutrition because in a meal I would
@@ -48,11 +48,11 @@ Triple the used values for bread nutrition because in a meal I would
     make3x_aggregates 1_cols breads                       :: dictionary for the tripling of the numeric columns. (1_ is to leave out 'name')
 
 \
-nSlicesPmeal: 4
-scalebreads: {nSlicesPmeal * x}
-annotatetripled: {(`scalebreads;x)}
-make3x_aggregates: {x ! annotatetripled each x}
-![`breads;enlist ({0 < count ss[;"bread"] string x} each;`name);0b;make3x_aggregates 1_cols breads]
+.lunch.nSlicesPmeal: 4
+lunch_scalebreads: {.lunch.nSlicesPmeal * x}
+.lunch.annotatetripled: {(`lunch_scalebreads;x)}
+.lunch.make3x_aggregates: {x ! .lunch.annotatetripled each x}
+![`lunch_breads;enlist ({0 < count ss[;"bread"] string x} each;`name);0b;.lunch.make3x_aggregates 1_cols lunch_breads];
 
 /
 Returns the result of AS.FIELD cross BS.FIELD
@@ -68,18 +68,18 @@ macrosfilter: {[tf;reqf;l]
   asXbs: tf flip l;
   where reqf asXbs}
 
-optional_lunchfoodtypes: `staples`breads`canneds
+.lunch.optionalfoodtypes: `lunch_staples`lunch_breads`lunch_canneds
 
 /
 Gives a table giving the maximum values for each of the macronutrients
   for each of the optional foodtypes. I tried using eachboth,
   but I couldn't make it work... Feelsbadman
 \
-macromax: {[table;field] max table[field]}
-intermediatereqs: ([foods: optional_lunchfoodtypes]
-  carbs:   {carbsreq   - macromax[x;y]}\:[optional_lunchfoodtypes;`gcarbsPserving];
-  protein: {proteinreq - macromax[x;y]}\:[optional_lunchfoodtypes;`gproteinPserving];
-  fat:     {fatreq     - macromax[x;y]}\:[optional_lunchfoodtypes;`gfatPserving])
+.lunch.macromax: {[table;field] max table[field]}
+.lunch.intermediatereqs: ([foods: .lunch.optionalfoodtypes]
+  carbs:   {.lunch.carbsreq   - .lunch.macromax[x;y]}\:[.lunch.optionalfoodtypes;`gcarbsPserving];
+  protein: {.lunch.proteinreq - .lunch.macromax[x;y]}\:[.lunch.optionalfoodtypes;`gproteinPserving];
+  fat:     {.lunch.fatreq     - .lunch.macromax[x;y]}\:[.lunch.optionalfoodtypes;`gfatPserving])
 
 /
 Gives a table containing filter functions for the intermediate filtration of
@@ -87,12 +87,12 @@ Gives a table containing filter functions for the intermediate filtration of
   that the meat-healthy pair is being tested against and the 3 macronutrients
   that form the basis of each test.
 \
-checkmacro: {[foodt;macroname;val] val > (intermediatereqs foodt)[macroname]}
-intermediatefilterfunc: {[foodt;macro] macrosfilter[sum;checkmacro[foodt;macro]]}
-filters: ([foods: optional_lunchfoodtypes]
-  carbs:   intermediatefilterfunc\:[optional_lunchfoodtypes;`carbs];
-  protein: intermediatefilterfunc\:[optional_lunchfoodtypes;`protein];
-  fat:     intermediatefilterfunc\:[optional_lunchfoodtypes;`fat])
+.lunch.checkmacro: {[foodt;macroname;val] val > (.lunch.intermediatereqs foodt)[macroname]}
+.lunch.intermediatefilterfunc: {[foodt;macro] macrosfilter[sum;.lunch.checkmacro[foodt;macro]]}
+.lunch.filters: ([foods: .lunch.optionalfoodtypes]
+  carbs:   .lunch.intermediatefilterfunc\:[.lunch.optionalfoodtypes;`carbs];
+  protein: .lunch.intermediatefilterfunc\:[.lunch.optionalfoodtypes;`protein];
+  fat:     .lunch.intermediatefilterfunc\:[.lunch.optionalfoodtypes;`fat])
 
 /
 We must now traverse back through our solutions to convert the FPIS
@@ -118,7 +118,7 @@ mapFPIs: {[fpis;p;c;as;bs;field]
 Returns the names of the 2 food (A and B) combinations that pass all
   of the filters specified in the dictionary FILTERFUNCTIONS.
 \
-axb_viables: {[a;b;filterfunctions;field]
+.lunch.axb_viables: {[a;b;filterfunctions;field]
   axb_carbpassingindices:    filterfunctions[`carbs]   fieldcross[`gcarbsPserving;  a;b];
   axb_proteinpassingindices: filterfunctions[`protein] fieldcross[`gproteinPserving;a;b] axb_carbpassingindices;
   axb_fatpassingindices:     filterfunctions[`fat]     fieldcross[`gfatPserving;    a;b] axb_proteinpassingindices;
@@ -128,46 +128,44 @@ axb_viables: {[a;b;filterfunctions;field]
 We must convert the list of viable combinations back into a table to
   be compared against their corresponding foodtype for validity.
 \
-mxh_viables: {[side;field] axb_viables[`meats;`healthys;filters side;field]}
-mxh_tabulateviables: {[foodtype]
+.lunch.mxh_viables: {[side;field] .lunch.axb_viables[`lunch_meats;`lunch_healthys;.lunch.filters side;field]}
+.lunch.mxh_tabulateviables: {[foodtype]
   ([]
-    name: mxh_viables[foodtype;`name];
-    gtotalPserving: sum each mxh_viables[foodtype;`gtotalPserving];
-    calsPserving: sum each mxh_viables[foodtype;`calsPserving];
-    gcarbsPserving: sum each mxh_viables[foodtype;`gcarbsPserving];
-    gproteinPserving: sum each mxh_viables[foodtype;`gproteinPserving];
-    gfatPserving: sum each mxh_viables[foodtype;`gfatPserving])}
+    name: .lunch.mxh_viables[foodtype;`name];
+    gtotalPserving: sum each .lunch.mxh_viables[foodtype;`gtotalPserving];
+    calsPserving: sum each .lunch.mxh_viables[foodtype;`calsPserving];
+    gcarbsPserving: sum each .lunch.mxh_viables[foodtype;`gcarbsPserving];
+    gproteinPserving: sum each .lunch.mxh_viables[foodtype;`gproteinPserving];
+    gfatPserving: sum each .lunch.mxh_viables[foodtype;`gfatPserving])}
 
 /
 For this test, no optimisation is being done, so we check that they
   pass the general requirements in our filter function.
 \
-generalfilter: {[req] macrosfilter[sum;>[;req]]}
-generalfilters: ([foods: optional_lunchfoodtypes]
-  carbs:   3 # generalfilter[carbsreq];
-  protein: 3 # generalfilter[proteinreq];
-  fat:     3 # generalfilter[fatreq])
+.lunch.generalfilter: {[req] macrosfilter[sum;>[;req]]}
+.lunch.generalfilters: ([foods: .lunch.optionalfoodtypes]
+  carbs:   3 # .lunch.generalfilter[.lunch.carbsreq];
+  protein: 3 # .lunch.generalfilter[.lunch.proteinreq];
+  fat:     3 # .lunch.generalfilter[.lunch.fatreq])
 
-gensolution: {[supplementfood] axb_viables[mxh_tabulateviables[supplementfood];supplementfood;generalfilters supplementfood;`name]}
-mxhxs_solution: gensolution `staples
-mxhxb_solution: gensolution `breads
-mxhxc_solution: gensolution `canneds
+.lunch.gensolution: {[supplementfood] .lunch.axb_viables[.lunch.mxh_tabulateviables[supplementfood];supplementfood;.lunch.generalfilters supplementfood;`name]}
+.lunch.mxhxs_solution: .lunch.gensolution `lunch_staples
+.lunch.mxhxb_solution: .lunch.gensolution `lunch_breads
+.lunch.mxhxc_solution: .lunch.gensolution `lunch_canneds
 
-lunchsolutions: mxhxs_solution , mxhxb_solution , mxhxc_solution
+.lunch.solutions: .lunch.mxhxs_solution , .lunch.mxhxb_solution , .lunch.mxhxc_solution
 
-price: {exec sum pricePserving from cost where name in x} each lunchsolutions
-ingredients: lunchsolutions
-requiredshops: {exec distinct boughtfrom from spending where name in x} each lunchsolutions
-nutritionstats: {exec sum gtotalPserving,sum calsPserving,sum gcarbsPserving,sum gproteinPserving,sum gfatPserving from nutrition where name in x} each lunchsolutions
+.lunch.price: {exec sum pricePserving from .lunch.cost where name in x} each .lunch.solutions
+.lunch.ingredients: .lunch.solutions
+.lunch.requiredshops: {exec distinct boughtfrom from .lunch.spending where name in x} each .lunch.solutions
+.lunch.nutritionstats: {exec sum gtotalPserving,sum calsPserving,sum gcarbsPserving,sum gproteinPserving,sum gfatPserving from .lunch.nutrition where name in x} each .lunch.solutions
 
-solutionstable: ([]
-  price: price;
-  ingredients: ingredients;
-  requiredshops: requiredshops;
-  gtotal: nutritionstats `gtotalPserving;
-  cals: nutritionstats `calsPserving;
-  gcarbs: nutritionstats `gcarbsPserving;
-  gprotein: nutritionstats `gproteinPserving;
-  gfat: nutritionstats `gfatPserving)
-
-planlunch: {solutionstable}
+.lunch.plan: {([]
+  price: .lunch.price;
+  ingredients: .lunch.ingredients;
+  requiredshops: .lunch.requiredshops;
+  gtotal: .lunch.nutritionstats `gtotalPserving;
+  cals: .lunch.nutritionstats `calsPserving;
+  gcarbs: .lunch.nutritionstats `gcarbsPserving;
+  gprotein: .lunch.nutritionstats `gproteinPserving;
+  gfat: .lunch.nutritionstats `gfatPserving)}

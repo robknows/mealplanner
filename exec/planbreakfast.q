@@ -2,25 +2,25 @@ spending: value`:../tables/spending
 nutrition: value`:../tables/nutrition
 cost: value`:../tables/cost
 
-breakfastfoodtypes: `cereal`side`bread
+.breakfast.foodtypes: `cereal`side`bread
 
-carbsreq: 70
-proteinreq: 10
-fatreq: 10
+.breakfast.carbsreq: 70
+.breakfast.proteinreq: 10
+.breakfast.fatreq: 10
 
-spending: select from spending where foodtype in breakfastfoodtypes
-groupedbyfoodtype: `foodtype xgroup spending
-breakfastfoodnames: exec name from spending
-nutrition: select from nutrition where name in breakfastfoodnames
-cost: select from cost where name in breakfastfoodnames
+.breakfast.spending: select from spending where foodtype in .breakfast.foodtypes, {x 0} each inmeals
+.breakfast.groupedbyfoodtype: `foodtype xgroup .breakfast.spending
+.breakfast.foodnames: exec name from .breakfast.spending
+.breakfast.nutrition: select from nutrition where name in .breakfast.foodnames
+.breakfast.cost: select from cost where name in .breakfast.foodnames
 
-categorisednutrition: {
-  categorisednames: select name from groupedbyfoodtype where foodtype=x;
-  lj[ungroup categorisednames; nutrition]}
+.breakfast.categorisednutrition: {
+  categorisednames: select name from .breakfast.groupedbyfoodtype where foodtype=x;
+  lj[ungroup categorisednames; .breakfast.nutrition]}
 
-cereals: categorisednutrition `cereal
-sides:   categorisednutrition `side
-breads:  categorisednutrition `bread
+breakfast_cereals: .breakfast.categorisednutrition `cereal
+breakfast_sides:   .breakfast.categorisednutrition `side
+breakfast_breads:  .breakfast.categorisednutrition `bread
 
 /
 Returns the result of AS.FIELD cross BS.FIELD
@@ -36,9 +36,9 @@ macrosfilter: {[tf;reqf;l]
   asXbs: tf flip l;
   where reqf asXbs}
 
-breakfast_carbsfilter:   macrosfilter[sum;{x > carbsreq}]
-breakfast_proteinfilter: macrosfilter[sum;{x > proteinreq}]
-breakfast_fatfilter:     macrosfilter[sum;{x > fatreq}]
+.breakfast.carbsfilter:   macrosfilter[sum;{x > .breakfast.carbsreq}]
+.breakfast.proteinfilter: macrosfilter[sum;{x > .breakfast.proteinreq}]
+.breakfast.fatfilter:     macrosfilter[sum;{x > .breakfast.fatreq}]
 
 /
 We must now traverse back through our solutions to convert the FPIS
@@ -60,30 +60,28 @@ mapFPIs_names: {[fpis;p;c;as;bs]
 Returns the names of the 2 food combinations that pass all requirements
   given two sets of foods A and B.
 \
-solvefortwofoods: {[a;b]
-  axb_carbpassingindices:    breakfast_carbsfilter   fieldcross[`gcarbsPserving;  a;b];
-  axb_proteinpassingindices: breakfast_proteinfilter fieldcross[`gproteinPserving;a;b] axb_carbpassingindices;
-  axb_fatpassingindices:     breakfast_fatfilter     fieldcross[`gfatPserving;    a;b] axb_proteinpassingindices;
+.breakfast.axb_viable: {[a;b]
+  axb_carbpassingindices:    .breakfast.carbsfilter   fieldcross[`gcarbsPserving;  a;b];
+  axb_proteinpassingindices: .breakfast.proteinfilter fieldcross[`gproteinPserving;a;b] axb_carbpassingindices;
+  axb_fatpassingindices:     .breakfast.fatfilter     fieldcross[`gfatPserving;    a;b] axb_proteinpassingindices;
   mapFPIs_names[axb_fatpassingindices;axb_proteinpassingindices;axb_carbpassingindices;a;b]}
 
-cxb_solution: solvefortwofoods[`cereals;`breads]
-cxs_solution: solvefortwofoods[`cereals;`sides]
+.breakfast.cxb_solution: .breakfast.axb_viable[`breakfast_cereals;`breakfast_breads]
+.breakfast.cxs_solution: .breakfast.axb_viable[`breakfast_cereals;`breakfast_sides]
 
-breakfastsolutions: cxb_solution , cxs_solution
+.breakfast.solutions: .breakfast.cxb_solution , .breakfast.cxs_solution
 
-price: {exec sum pricePserving from cost where name in x} each breakfastsolutions
-ingredients: breakfastsolutions
-requiredshops: {exec distinct boughtfrom from spending where name in x} each breakfastsolutions
-nutritionstats: {exec sum gtotalPserving,sum calsPserving,sum gcarbsPserving,sum gproteinPserving,sum gfatPserving from nutrition where name in x} each breakfastsolutions
+.breakfast.price: {exec sum pricePserving from  .breakfast.cost where name in x} each .breakfast.solutions
+.breakfast.ingredients: .breakfast.solutions
+.breakfast.requiredshops: {exec distinct boughtfrom from .breakfast.spending where name in x} each .breakfast.solutions
+.breakfast.nutritionstats: {exec sum gtotalPserving,sum calsPserving,sum gcarbsPserving,sum gproteinPserving,sum gfatPserving from .breakfast.nutrition where name in x} each .breakfast.solutions
 
-solutionstable: ([]
-  price: price;
-  ingredients: ingredients;
-  requiredshops: requiredshops;
-  gtotal: nutritionstats `gtotalPserving;
-  cals: nutritionstats `calsPserving;
-  gcarbs: nutritionstats `gcarbsPserving;
-  gprotein: nutritionstats `gproteinPserving;
-  gfat: nutritionstats `gfatPserving)
-  
-planbreakfast: {solutionstable}
+.breakfast.plan: {([]
+  price: .breakfast.price;
+  ingredients: .breakfast.ingredients;
+  requiredshops: .breakfast.requiredshops;
+  gtotal: .breakfast.nutritionstats `gtotalPserving;
+  cals: .breakfast.nutritionstats `calsPserving;
+  gcarbs: .breakfast.nutritionstats `gcarbsPserving;
+  gprotein: .breakfast.nutritionstats `gproteinPserving;
+  gfat: .breakfast.nutritionstats `gfatPserving)}

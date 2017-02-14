@@ -1,1 +1,1 @@
-plandinner: {`ayy}
+.dinner.plan: {`ayy}
