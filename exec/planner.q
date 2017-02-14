@@ -1,100 +1,29 @@
 #!/home/rob/q/l32/q
 
-spending: value`:../tables/spending
-nutrition: value`:../tables/nutrition
-cost: value`:../tables/cost
-
 input: first "S"$.z.x
 
 meals:`breakfast`lunch`dinner
 if[not input in meals;1 "\nInput must be one of breakfast lunch dinner.\n";exit 1]
 
-reqs: ([meal:meals] 
-  i: 0 1 2;
-  carbsreq: 70 80 50; 
-  proteinreq: 10 40 50; 
-  fatreq: 10 50 70)
+breakfast: {
+  \l planbreakfast.q
+  planbreakfast}
 
-carbsreq: (reqs input)[`carbsreq]
-proteinreq: (reqs input)[`proteinreq]
-fatreq: (reqs input)[`fatreq]
-index: (reqs input)[`i]
-mealfilter: {x index}
+lunch: {
+  \l planlunch.q
+  planlunch}
 
-mealappropriatefoods: exec name from spending where mealfilter each inmeals
-nutrition: 0!(select from nutrition where name in mealappropriatefoods)
+dinner: {
+  \l plandinner.q
+  plandinner}
 
-maxcarbs: max exec gcarbsPserving from nutrition
-maxprotein: max exec gproteinPserving from nutrition
-maxfat: max exec gfatPserving from nutrition
+plan: first (breakfast ; lunch ; dinner) where input=meals
 
-filter: {y where x each y}
-
-checkcarbs: {<[x;sum (nutrition y)[`gcarbsPserving]]}
-checkprotein: {<[x;sum (nutrition y)[`gproteinPserving]]}
-checkfat: {<[x;sum (nutrition y)[`gfatPserving]]}
-
-applyallfilters2i: {
-  filter[checkfat[fatreq - maxfat]] 
-  filter[checkprotein[proteinreq - maxprotein]] 
-  filter[checkcarbs[carbsreq - maxcarbs]] x}
-
-applyallfilters3i: {
-  filter[checkfat[fatreq]]
-  filter[checkprotein[proteinreq]]
-  filter[checkcarbs[carbsreq]] x}
-
-/
-a=all
-i=ingredient
-p=potentially
-v=valid
-o=optimised
 \
-a2i: {x cross x} til count nutrition
-pv2i: applyallfilters2i a2i
-opv3i: pv2i cross (til count nutrition)
-v3i: applyallfilters3i opv3i
-solutions: distinct asc each v3i
-
-sumquantity: {sum (nutrition y)[x]}
-solingredients: {exec name from (nutrition x)}
-solgtotal: sumquantity[`gtotalPserving]
-solcals: sumquantity[`calsPserving]
-solcarbs: sumquantity[`gcarbsPserving]
-solprotein: sumquantity[`gproteinPserving]
-solfat: sumquantity[`gfatPserving]
-
-fromsolutions: {x each solutions}
-
-ingredientsols: fromsolutions solingredients
-
-presentsymbols: {sv[","] string x}
-
-ingredients: presentsymbols each ingredientsols
-
-mealprices: {exec sum pricePserving from (cost each x)} each ingredientsols
-shopsols: {exec distinct boughtfrom from (spending each x)} each ingredientsols
-
-shops: presentsymbols each shopsols
-
-solutionstable: ([]
-  price: mealprices;
-  ingredients: ingredients;
-  requiredshops: shops;
-  gtotal: fromsolutions solgtotal; 
-  cals: fromsolutions solcals; 
-  carbs: fromsolutions solcarbs; 
-  protein: fromsolutions solprotein; 
-  fat: fromsolutions solfat)
-
-occurrences: {count ss[y;x]}
-
+We can introduce a stochastic element here later using a random seed
+  as an argument to the planningmethod functions.
 /
-Select the solutions which have either 0 or 1 cans. (Canned food isn't good)
-This is an inefficient way of doing this. Will find a better way soon. TODO.
-\
-solutionstable: asc select from solutionstable where 2 > occurrences["can"] each ingredients
+solutionstable: plan[]
 
 save `:solutionstable.txt
 lastsolutions: solutionstable
