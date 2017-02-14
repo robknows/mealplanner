@@ -28,21 +28,9 @@
 \begin{document}
 \maketitle
 
-\section{Solution-independent Specification}
+\section{What the program does}
 
-\subsection{Daily specification}
-
-\begin{itemize}
-  \item 3 meals
-  \item 3000 calories
-  \item 360g carbohydrate
-  \item 100g protein
-  \item 130g fat
-  \item 600g food total
-  \item Eat less than £10 worth of food NB. This will change once I find what a reasonable value for it is.
-\end{itemize}
-
-\subsection{Meal specification}
+\subsection{Meal nutrient specification}
 
 Breakfast:
 \begin{itemize}
@@ -53,7 +41,7 @@ Breakfast:
 
 Lunch:
 \begin{itemize}
-  \item 80g carbohydrate
+  \item 75g carbohydrate
   \item 40g protein
   \item 50g fat
 \end{itemize}
@@ -65,16 +53,33 @@ Dinner:
   \item 70g fat
 \end{itemize}
 
-Additionally, all meals must have 3 different solid foods in them. Milk 
-is considered a given for every meal, and hence the fat and protein 
-values may be lower than they actually need to be. Furthermore I intend 
-to be snacking throughout the day to keep calories high, so this is 
-another source of leeway for the solutions.
+Additionally, all meals must have the right combination of foods in them, as 
+specified below:
 
-Since at this stage the solutions are only suggestions, they need not be 
-exhaustive, and I can decide for myself from the results what to eat.
 
-\section{Required Function of the Program}
+Breakfast:
+\begin{itemize}
+  \item 1 cereal 
+  \item 1 side or 1 bread.
+\end{itemize}
+
+Lunch:
+\begin{itemize}
+  \item 1 meat
+  \item 1 healthy
+  \item One of 1 staple, 1 bread or 1 canned 
+  \item Optionally one of 1 dessert, 1 side or 1 dairy.
+\end{itemize}
+
+Dinner:
+\begin{itemize}
+  \item 1 meat
+  \item 1 healthy
+  \item One of 1 staple, 1 bread or 1 canned 
+  \item One of 1 dessert, 1 side or 1 dairy.
+\end{itemize}
+
+\section{Use of the Program}
 
 \subsection{Meal}
 
@@ -89,7 +94,8 @@ When a meal is specified, the following things should be shown:
 
 \begin{itemize}
   \item List of foods for the meal
-  \item Number of calories(N/A) in the meal
+  \item The shops I need to visit to buy the food
+  \item Number of calories in the meal
   \item Macronutrient(g) breakdown of the given meal
   \item Number of grams of food in the meal in total
   \item Cost(£) of buying each item in the meal from the shop
@@ -99,23 +105,13 @@ The foods returned must conform to all of the specification
 requirements. Furthermore, it must check the appropriateness of each 
 food ie. Milk, cornflakes and toast for dinner is not a good suggestion.
 
-\subsection{Day}
-
-Furthermore, if the program is called without arguments, it should 
-behave as though breakfast, lunch and dinner were all requested, giving 
-meals for the whole day.
-
-When giving results in this form, the meal plan must also be checked for 
-conformity to daily requirements for total(g), macronutrient(g) and 
-calorie(N/A) consumption.
-
 \section{Algorithm}
 
 A simple O($n^{3}$) search with optimisations at intermediate steps suffices 
 for this problem.
 
 I consider this to be okay because a local shop inventory database is 
-never going to be large enough that this gets out of hand.
+never going to be large enough that this complexity gets out of hand.
 
 \section{Table}
 
@@ -131,6 +127,7 @@ kitchen.
   \item nServings (int)
   \item servingDescription (string)
   \item inmeals (bool list)
+  \item foodtype (symbol)
 \end{itemize}
 
 \subsection{GivenStats}
@@ -157,6 +154,15 @@ Information to do with a food's nutritional value at serving time.
   \item gcarbsPserving (float)
   \item gproteinPserving (float)
   \item gfatPserving (float)
+\end{itemize}
+
+\subsection{Cost}
+
+\begin{itemize}
+  \item name (symbol)
+  \item pricePserving (float)
+  \item gramsPpound (float)
+  \item caloriesPpound (float)
 \end{itemize}
 
 \end{document}
