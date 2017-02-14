@@ -69,7 +69,7 @@ breakfastsolutions: cxb_solution , cxs_solution
 
 price: {exec sum pricePserving from cost where name in x} each breakfastsolutions
 ingredients: breakfastsolutions
-requiredshops: {exec boughtfrom from spending where name in x} each breakfastsolutions
+requiredshops: {exec distinct boughtfrom from spending where name in x} each breakfastsolutions
 nutritionstats: {exec sum gtotalPserving,sum calsPserving,sum gcarbsPserving,sum gproteinPserving,sum gfatPserving from nutrition where name in x} each breakfastsolutions
 
 solutionstable: ([]
