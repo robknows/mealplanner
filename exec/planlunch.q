@@ -111,17 +111,9 @@ For this test, no optimisation is being done, so we check that they
 
 .lunch.solutions: .lunch.mxhxs_solution , .lunch.mxhxb_solution , .lunch.mxhxc_solution
 
-.lunch.price: .planlib.pricesols[.lunch.cost;.lunch.solutions]
-.lunch.ingredients: .lunch.solutions
-.lunch.requiredshops: .planlib.shopsrequiredsols[.lunch.spending;.lunch.solutions]
-.lunch.nutritionstats: {exec sum gtotalPserving,sum calsPserving,sum gcarbsPserving,sum gproteinPserving,sum gfatPserving from .lunch.nutrition where name in x} each .lunch.solutions
+.lunch.price:          .planlib.pricesols[.lunch.cost;.lunch.solutions]
+.lunch.ingredients:    .lunch.solutions
+.lunch.requiredshops:  .planlib.shopsrequiredsols[.lunch.spending;.lunch.solutions]
+.lunch.nutritionstats: .planlib.nutritionstats[.lunch.nutrition;.lunch.solutions]
 
-.lunch.plan: {([]
-  price: .lunch.price;
-  ingredients: .lunch.ingredients;
-  requiredshops: .lunch.requiredshops;
-  gtotal: .lunch.nutritionstats `gtotalPserving;
-  cals: .lunch.nutritionstats `calsPserving;
-  gcarbs: .lunch.nutritionstats `gcarbsPserving;
-  gprotein: .lunch.nutritionstats `gproteinPserving;
-  gfat: .lunch.nutritionstats `gfatPserving)}
+.lunch.plan: {.planlib.solutionstable[.lunch.price;.lunch.ingredients;.lunch.requiredshops;.lunch.nutritionstats]}

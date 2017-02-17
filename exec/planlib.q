@@ -53,5 +53,19 @@ Returns the names of the 2 food (A and B) combinations that pass all
   .planlib.mapFPIs[axb_fatpassingindices;axb_proteinpassingindices;axb_carbpassingindices;a;b;field]}
 
 .planlib.pricesols: {[ftcost;sols] {[ftcost;sol] exec sum pricePserving from ftcost where name in sol}[ftcost] each sols}
-
 .planlib.shopsrequiredsols: {[ftspending;sols] {[ftspending;sol] exec distinct boughtfrom from ftspending where name in sol}[ftspending] each sols}
+
+.planlib.annotatesummed: {(sum;x)}
+.planlib.make_sum_aggregates: {x ! .planlib.annotatesummed each x}
+.planlib.nutritionstats: {[ftnutrition;sols] {[ftnutrition;sol] ?[ftnutrition;enlist (in;`name;`sol);();.planlib.make_sum_aggregates 1_cols ftnutrition]}[ftnutrition] each sols}
+
+.planlib.solutionstable: {[prices;ingredients;requiredshops;nutritionstats]
+  ([]
+    price:         prices;
+    ingredients:   ingredients;
+    requiredshops: requiredshops;
+    gtotal:        nutritionstats `gtotalPserving;
+    cals:          nutritionstats `calsPserving;
+    gcarbs:        nutritionstats `gcarbsPserving;
+    gprotein:      nutritionstats `gproteinPserving;
+    gfat:          nutritionstats `gfatPserving)}

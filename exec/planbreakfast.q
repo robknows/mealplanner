@@ -33,17 +33,9 @@ breakfast_breads:  .breakfast.categorisednutrition `bread
 
 .breakfast.solutions: .breakfast.cxb_solution , .breakfast.cxs_solution
 
-.breakfast.price: .planlib.pricesols[.breakfast.cost;.breakfast.solutions]
-.breakfast.ingredients: .breakfast.solutions
-.breakfast.requiredshops: .planlib.shopsrequiredsols[.breakfast.spending;.breakfast.solutions]
-.breakfast.nutritionstats: {exec sum gtotalPserving,sum calsPserving,sum gcarbsPserving,sum gproteinPserving,sum gfatPserving from .breakfast.nutrition where name in x} each .breakfast.solutions
+.breakfast.price:          .planlib.pricesols[.breakfast.cost;.breakfast.solutions]
+.breakfast.ingredients:    .breakfast.solutions
+.breakfast.requiredshops:  .planlib.shopsrequiredsols[.breakfast.spending;.breakfast.solutions]
+.breakfast.nutritionstats: .planlib.nutritionstats[.breakfast.nutrition;.breakfast.solutions]
 
-.breakfast.plan: {([]
-  price: .breakfast.price;
-  ingredients: .breakfast.ingredients;
-  requiredshops: .breakfast.requiredshops;
-  gtotal: .breakfast.nutritionstats `gtotalPserving;
-  cals: .breakfast.nutritionstats `calsPserving;
-  gcarbs: .breakfast.nutritionstats `gcarbsPserving;
-  gprotein: .breakfast.nutritionstats `gproteinPserving;
-  gfat: .breakfast.nutritionstats `gfatPserving)}
+.breakfast.plan: {.planlib.solutionstable[.breakfast.price;.breakfast.ingredients;.breakfast.requiredshops;.breakfast.nutritionstats]}
