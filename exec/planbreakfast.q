@@ -21,22 +21,17 @@ breakfast_cereals: .breakfast.categorisednutrition `cereal
 breakfast_sides:   .breakfast.categorisednutrition `side
 breakfast_breads:  .breakfast.categorisednutrition `bread
 
-.breakfast.carbsfilter:   .planlib.macrosfilter[sum;{x > .breakfast.carbsreq}]
-.breakfast.proteinfilter: .planlib.macrosfilter[sum;{x > .breakfast.proteinreq}]
-.breakfast.fatfilter:     .planlib.macrosfilter[sum;{x > .breakfast.fatreq}]
+.breakfast.macrosfilter:   {[macroreq] .planlib.macrosfilter[sum;{y > x} macroreq]}
+.breakfast.carbsfilter:   .breakfast.macrosfilter .breakfast.carbsreq
+.breakfast.proteinfilter: .breakfast.macrosfilter .breakfast.proteinreq
+.breakfast.fatfilter:     .breakfast.macrosfilter .breakfast.fatreq
 
-/
-Returns the names of the 2 food combinations that pass all requirements
-  given two sets of foods A and B.
-\
-.breakfast.axb_viable: {[a;b]
-  axb_carbpassingindices:    .breakfast.carbsfilter   .planlib.fieldcross[`gcarbsPserving;  a;b];
-  axb_proteinpassingindices: .breakfast.proteinfilter .planlib.fieldcross[`gproteinPserving;a;b] axb_carbpassingindices;
-  axb_fatpassingindices:     .breakfast.fatfilter     .planlib.fieldcross[`gfatPserving;    a;b] axb_proteinpassingindices;
-  .planlib.mapFPIs[axb_fatpassingindices;axb_proteinpassingindices;axb_carbpassingindices;a;b;`name]}
+.breakfast.filters: `carbs`protein`fat!(.breakfast.carbsfilter;.breakfast.proteinfilter;.breakfast.fatfilter)
 
-.breakfast.cxb_solution: .breakfast.axb_viable[`breakfast_cereals;`breakfast_breads]
-.breakfast.cxs_solution: .breakfast.axb_viable[`breakfast_cereals;`breakfast_sides]
+.breakfast.axb_viables: {[a;b] .planlib.axb_viables[a;b;.breakfast.filters;`name]}
+
+.breakfast.cxb_solution: .breakfast.axb_viables[`breakfast_cereals;`breakfast_breads]
+.breakfast.cxs_solution: .breakfast.axb_viables[`breakfast_cereals;`breakfast_sides]
 
 .breakfast.solutions: .breakfast.cxb_solution , .breakfast.cxs_solution
 

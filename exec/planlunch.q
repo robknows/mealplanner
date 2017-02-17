@@ -81,20 +81,10 @@ Gives a table containing filter functions for the intermediate filtration of
   fat:     .lunch.intermediatefilterfunc\:[.lunch.optionalfoodtypes;`fat])
 
 /
-Returns the names of the 2 food (A and B) combinations that pass all
-  of the filters specified in the dictionary FILTERFUNCTIONS.
-\
-.lunch.axb_viables: {[a;b;filterfunctions;field]
-  axb_carbpassingindices:    filterfunctions[`carbs]   .planlib.fieldcross[`gcarbsPserving;  a;b];
-  axb_proteinpassingindices: filterfunctions[`protein] .planlib.fieldcross[`gproteinPserving;a;b] axb_carbpassingindices;
-  axb_fatpassingindices:     filterfunctions[`fat]     .planlib.fieldcross[`gfatPserving;    a;b] axb_proteinpassingindices;
-  .planlib.mapFPIs[axb_fatpassingindices;axb_proteinpassingindices;axb_carbpassingindices;a;b;field]}
-
-/
 We must convert the list of viable combinations back into a table to
   be compared against their corresponding foodtype for validity.
 \
-.lunch.mxh_viables: {[side;field] .lunch.axb_viables[`lunch_meats;`lunch_healthys;.lunch.filters side;field]}
+.lunch.mxh_viables: {[side;field] .planlib.axb_viables[`lunch_meats;`lunch_healthys;.lunch.filters side;field]}
 .lunch.mxh_tabulateviables: {[foodtype]
   ([]
     name: .lunch.mxh_viables[foodtype;`name];
@@ -114,7 +104,7 @@ For this test, no optimisation is being done, so we check that they
   protein: 3 # .lunch.generalfilter[.lunch.proteinreq];
   fat:     3 # .lunch.generalfilter[.lunch.fatreq])
 
-.lunch.gensolution: {[supplementfood] .lunch.axb_viables[.lunch.mxh_tabulateviables[supplementfood];supplementfood;.lunch.generalfilters supplementfood;`name]}
+.lunch.gensolution: {[supplementfood] .planlib.axb_viables[.lunch.mxh_tabulateviables[supplementfood];supplementfood;.lunch.generalfilters supplementfood;`name]}
 .lunch.mxhxs_solution: .lunch.gensolution `lunch_staples
 .lunch.mxhxb_solution: .lunch.gensolution `lunch_breads
 .lunch.mxhxc_solution: .lunch.gensolution `lunch_canneds

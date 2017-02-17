@@ -41,3 +41,13 @@ To do this it goes from FPIS back into the ppis, selecting only those
   ppis: p fpis;
   cpis: c ppis;
   .planlib.fieldcross[field;as;bs] cpis}
+
+/
+Returns the names of the 2 food (A and B) combinations that pass all
+  of the filters specified in the dictionary FILTERFUNCTIONS.
+\
+.planlib.axb_viables: {[a;b;filterfunctions;field]
+  axb_carbpassingindices:    filterfunctions[`carbs]   .planlib.fieldcross[`gcarbsPserving;  a;b];
+  axb_proteinpassingindices: filterfunctions[`protein] .planlib.fieldcross[`gproteinPserving;a;b] axb_carbpassingindices;
+  axb_fatpassingindices:     filterfunctions[`fat]     .planlib.fieldcross[`gfatPserving;    a;b] axb_proteinpassingindices;
+  .planlib.mapFPIs[axb_fatpassingindices;axb_proteinpassingindices;axb_carbpassingindices;a;b;field]}
