@@ -6,3 +6,6 @@
 
 # lastsolutions table
 tables/lastsolutions
+
+# Nano save files
+*.swp
