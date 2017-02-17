@@ -2,21 +2,20 @@ spending: value`:../tables/spending
 nutrition: value`:../tables/nutrition
 cost: value`:../tables/cost
 
+\l planlib.q
+
 .breakfast.foodtypes: `cereal`side`bread
 
 .breakfast.carbsreq: 70
 .breakfast.proteinreq: 10
 .breakfast.fatreq: 10
 
-.breakfast.spending: select from spending where foodtype in .breakfast.foodtypes, {x 0} each inmeals
-.breakfast.groupedbyfoodtype: `foodtype xgroup .breakfast.spending
+.breakfast.spending:  .planlib.spending[`breakfast;.breakfast.foodtypes]
 .breakfast.foodnames: exec name from .breakfast.spending
 .breakfast.nutrition: select from nutrition where name in .breakfast.foodnames
-.breakfast.cost: select from cost where name in .breakfast.foodnames
+.breakfast.cost:      select from cost where name in .breakfast.foodnames
 
-.breakfast.categorisednutrition: {
-  categorisednames: select name from .breakfast.groupedbyfoodtype where foodtype=x;
-  lj[ungroup categorisednames; .breakfast.nutrition]}
+.breakfast.categorisednutrition: .planlib.categorisenutrition[.breakfast.spending;.breakfast.nutrition]
 
 breakfast_cereals: .breakfast.categorisednutrition `cereal
 breakfast_sides:   .breakfast.categorisednutrition `side

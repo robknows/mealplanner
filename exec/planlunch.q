@@ -2,21 +2,21 @@ spending: value`:../tables/spending
 nutrition: value`:../tables/nutrition
 cost: value`:../tables/cost
 
+\l planlib.q
+
 .lunch.foodtypes: `meat`healthy`staple`bread`canned
 
 .lunch.carbsreq: 75
 .lunch.proteinreq: 40
 .lunch.fatreq: 50
 
-.lunch.spending:          select from spending  where foodtype in .lunch.foodtypes, {x 1} each inmeals
+.lunch.spending:          .planlib.spending[`lunch;.lunch.foodtypes]
 .lunch.groupedbyfoodtype: `foodtype xgroup .lunch.spending
-.lunch.foodnames:    exec name from .lunch.spending
+.lunch.foodnames:         exec name from .lunch.spending
 .lunch.nutrition:         select from nutrition where name in .lunch.foodnames
 .lunch.cost:              select from cost      where name in .lunch.foodnames
 
-.lunch.categorisednutrition: {
-  categorisednames: select name from .lunch.groupedbyfoodtype where foodtype=x;
-  lj[ungroup categorisednames; .lunch.nutrition]}
+.lunch.categorisednutrition: .planlib.categorisenutrition[.lunch.spending;.lunch.nutrition]
 
 lunch_meats:    .lunch.categorisednutrition `meat
 lunch_healthys: .lunch.categorisednutrition `healthy
