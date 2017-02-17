@@ -25,17 +25,15 @@ breakfast_breads:  .breakfast.categorisednutrition `bread
 .breakfast.carbsfilter:   .breakfast.macrosfilter .breakfast.carbsreq
 .breakfast.proteinfilter: .breakfast.macrosfilter .breakfast.proteinreq
 .breakfast.fatfilter:     .breakfast.macrosfilter .breakfast.fatreq
-
 .breakfast.filters: `carbs`protein`fat!(.breakfast.carbsfilter;.breakfast.proteinfilter;.breakfast.fatfilter)
 
 .breakfast.axb_viables: {[a;b] .planlib.axb_viables[a;b;.breakfast.filters;`name]}
-
 .breakfast.cxb_solution: .breakfast.axb_viables[`breakfast_cereals;`breakfast_breads]
 .breakfast.cxs_solution: .breakfast.axb_viables[`breakfast_cereals;`breakfast_sides]
 
 .breakfast.solutions: .breakfast.cxb_solution , .breakfast.cxs_solution
 
-.breakfast.price: {exec sum pricePserving from  .breakfast.cost where name in x} each .breakfast.solutions
+.breakfast.price: .planlib.pricesols[.breakfast.cost;.breakfast.solutions]
 .breakfast.ingredients: .breakfast.solutions
 .breakfast.requiredshops: {exec distinct boughtfrom from .breakfast.spending where name in x} each .breakfast.solutions
 .breakfast.nutritionstats: {exec sum gtotalPserving,sum calsPserving,sum gcarbsPserving,sum gproteinPserving,sum gfatPserving from .breakfast.nutrition where name in x} each .breakfast.solutions

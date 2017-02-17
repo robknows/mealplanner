@@ -51,3 +51,5 @@ Returns the names of the 2 food (A and B) combinations that pass all
   axb_proteinpassingindices: filterfunctions[`protein] .planlib.fieldcross[`gproteinPserving;a;b] axb_carbpassingindices;
   axb_fatpassingindices:     filterfunctions[`fat]     .planlib.fieldcross[`gfatPserving;    a;b] axb_proteinpassingindices;
   .planlib.mapFPIs[axb_fatpassingindices;axb_proteinpassingindices;axb_carbpassingindices;a;b;field]}
+
+.planlib.pricesols: {[ftcost;sols] {[ftcost;sol] exec sum pricePserving from ftcost where name in sol}[ftcost] each sols}
