@@ -54,20 +54,6 @@ lunch_scalebreads: {.lunch.nSlicesPmeal * x}
 .lunch.make3x_aggregates: {x ! .lunch.annotatetripled each x}
 ![`lunch_breads;enlist ({0 < count ss[;"bread"] string x} each;`name);0b;.lunch.make3x_aggregates 1_cols lunch_breads];
 
-/
-Returns the result of AS.FIELD cross BS.FIELD
-\
-fieldcross: {[field;as;bs]
-  as[field] cross bs[field]}
-
-/
-Returns the indices at which L, when flipped and then transformed with
-  function TF return true for the predicate REQF.
-\
-macrosfilter: {[tf;reqf;l]
-  asXbs: tf flip l;
-  where reqf asXbs}
-
 .lunch.optionalfoodtypes: `lunch_staples`lunch_breads`lunch_canneds
 
 /
@@ -88,41 +74,21 @@ Gives a table containing filter functions for the intermediate filtration of
   that form the basis of each test.
 \
 .lunch.checkmacro: {[foodt;macroname;val] val > (.lunch.intermediatereqs foodt)[macroname]}
-.lunch.intermediatefilterfunc: {[foodt;macro] macrosfilter[sum;.lunch.checkmacro[foodt;macro]]}
+.lunch.intermediatefilterfunc: {[foodt;macro] .planlib.macrosfilter[sum;.lunch.checkmacro[foodt;macro]]}
 .lunch.filters: ([foods: .lunch.optionalfoodtypes]
   carbs:   .lunch.intermediatefilterfunc\:[.lunch.optionalfoodtypes;`carbs];
   protein: .lunch.intermediatefilterfunc\:[.lunch.optionalfoodtypes;`protein];
   fat:     .lunch.intermediatefilterfunc\:[.lunch.optionalfoodtypes;`fat])
 
 /
-We must now traverse back through our solutions to convert the FPIS
-  (fatpassingindices) to the names of their corresponding food combination
-  of an element of AS and an element of BS.
-
-C are the carb passing indices
-P are the protein passing indices
-
-To do this it goes from FPIS back into the ppis, selecting only those
-  which passes the fat test, then from ppis back into cpis, again,
-  selecting only those which have passed the first two tests, and then
-  finally it turns these indices into a cross of whatever field you
-  choose.
-
-\
-mapFPIs: {[fpis;p;c;as;bs;field]
-  ppis: p fpis;
-  cpis: c ppis;
-  fieldcross[field;as;bs] cpis}
-
-/
 Returns the names of the 2 food (A and B) combinations that pass all
   of the filters specified in the dictionary FILTERFUNCTIONS.
 \
 .lunch.axb_viables: {[a;b;filterfunctions;field]
-  axb_carbpassingindices:    filterfunctions[`carbs]   fieldcross[`gcarbsPserving;  a;b];
-  axb_proteinpassingindices: filterfunctions[`protein] fieldcross[`gproteinPserving;a;b] axb_carbpassingindices;
-  axb_fatpassingindices:     filterfunctions[`fat]     fieldcross[`gfatPserving;    a;b] axb_proteinpassingindices;
-  mapFPIs[axb_fatpassingindices;axb_proteinpassingindices;axb_carbpassingindices;a;b;field]}
+  axb_carbpassingindices:    filterfunctions[`carbs]   .planlib.fieldcross[`gcarbsPserving;  a;b];
+  axb_proteinpassingindices: filterfunctions[`protein] .planlib.fieldcross[`gproteinPserving;a;b] axb_carbpassingindices;
+  axb_fatpassingindices:     filterfunctions[`fat]     .planlib.fieldcross[`gfatPserving;    a;b] axb_proteinpassingindices;
+  .planlib.mapFPIs[axb_fatpassingindices;axb_proteinpassingindices;axb_carbpassingindices;a;b;field]}
 
 /
 We must convert the list of viable combinations back into a table to
@@ -142,7 +108,7 @@ We must convert the list of viable combinations back into a table to
 For this test, no optimisation is being done, so we check that they
   pass the general requirements in our filter function.
 \
-.lunch.generalfilter: {[req] macrosfilter[sum;>[;req]]}
+.lunch.generalfilter: {[req] .planlib.macrosfilter[sum;>[;req]]}
 .lunch.generalfilters: ([foods: .lunch.optionalfoodtypes]
   carbs:   3 # .lunch.generalfilter[.lunch.carbsreq];
   protein: 3 # .lunch.generalfilter[.lunch.proteinreq];

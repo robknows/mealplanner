@@ -21,49 +21,19 @@ breakfast_cereals: .breakfast.categorisednutrition `cereal
 breakfast_sides:   .breakfast.categorisednutrition `side
 breakfast_breads:  .breakfast.categorisednutrition `bread
 
-/
-Returns the result of AS.FIELD cross BS.FIELD
-\
-fieldcross: {[field;as;bs]
-  as[field] cross bs[field]}
-
-/
-Returns the indices at which L, when flipped and then transformed with 
-  function TF return true for the predicate REQF.
-\
-macrosfilter: {[tf;reqf;l]
-  asXbs: tf flip l;
-  where reqf asXbs}
-
-.breakfast.carbsfilter:   macrosfilter[sum;{x > .breakfast.carbsreq}]
-.breakfast.proteinfilter: macrosfilter[sum;{x > .breakfast.proteinreq}]
-.breakfast.fatfilter:     macrosfilter[sum;{x > .breakfast.fatreq}]
-
-/
-We must now traverse back through our solutions to convert the FPIS
-  (fatpassingindices) to the names of their corresponding food combination
-  of an element of AS and an element of BS.
-  
-To do this it goes from FPIS back into the ppis, selecting only those
-  which passes the fat test, then from ppis back into cpis, again, 
-  selecting only those which have passed the first two tests, and then
-  finally it turns these indices into names. This explains why this
-  function requres C and P and parameters
-\
-mapFPIs_names: {[fpis;p;c;as;bs]
-  ppis: p fpis;
-  cpis: c ppis;
-  fieldcross[`name;as;bs] cpis}
+.breakfast.carbsfilter:   .planlib.macrosfilter[sum;{x > .breakfast.carbsreq}]
+.breakfast.proteinfilter: .planlib.macrosfilter[sum;{x > .breakfast.proteinreq}]
+.breakfast.fatfilter:     .planlib.macrosfilter[sum;{x > .breakfast.fatreq}]
 
 /
 Returns the names of the 2 food combinations that pass all requirements
   given two sets of foods A and B.
 \
 .breakfast.axb_viable: {[a;b]
-  axb_carbpassingindices:    .breakfast.carbsfilter   fieldcross[`gcarbsPserving;  a;b];
-  axb_proteinpassingindices: .breakfast.proteinfilter fieldcross[`gproteinPserving;a;b] axb_carbpassingindices;
-  axb_fatpassingindices:     .breakfast.fatfilter     fieldcross[`gfatPserving;    a;b] axb_proteinpassingindices;
-  mapFPIs_names[axb_fatpassingindices;axb_proteinpassingindices;axb_carbpassingindices;a;b]}
+  axb_carbpassingindices:    .breakfast.carbsfilter   .planlib.fieldcross[`gcarbsPserving;  a;b];
+  axb_proteinpassingindices: .breakfast.proteinfilter .planlib.fieldcross[`gproteinPserving;a;b] axb_carbpassingindices;
+  axb_fatpassingindices:     .breakfast.fatfilter     .planlib.fieldcross[`gfatPserving;    a;b] axb_proteinpassingindices;
+  .planlib.mapFPIs[axb_fatpassingindices;axb_proteinpassingindices;axb_carbpassingindices;a;b;`name]}
 
 .breakfast.cxb_solution: .breakfast.axb_viable[`breakfast_cereals;`breakfast_breads]
 .breakfast.cxs_solution: .breakfast.axb_viable[`breakfast_cereals;`breakfast_sides]
