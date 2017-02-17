@@ -43,6 +43,18 @@ To do this it goes from FPIS back into the ppis, selecting only those
   .planlib.fieldcross[field;as;bs] cpis}
 
 /
+A table of general filters for when no optimisation step is being done
+  and you simply want to find the results which pass for a constant
+  set of macro requirements
+\
+.planlib.generalfilter: {[req] .planlib.macrosfilter[sum;>[;req]]}
+.planlib.generalfilters: {[carbsreq;proteinreq;fatreq;foods]
+  ([foods: foods]
+    carbs:   3 # .planlib.generalfilter[carbsreq];
+    protein: 3 # .planlib.generalfilter[proteinreq];
+    fat:     3 # .planlib.generalfilter[fatreq])}
+
+/
 Returns the names of the 2 food (A and B) combinations that pass all
   of the filters specified in the dictionary FILTERFUNCTIONS.
 \

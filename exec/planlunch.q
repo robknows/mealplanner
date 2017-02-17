@@ -94,15 +94,7 @@ We must convert the list of viable combinations back into a table to
     gproteinPserving: sum each .lunch.mxh_viables[foodtype;`gproteinPserving];
     gfatPserving: sum each .lunch.mxh_viables[foodtype;`gfatPserving])}
 
-/
-For this test, no optimisation is being done, so we check that they
-  pass the general requirements in our filter function.
-\
-.lunch.generalfilter: {[req] .planlib.macrosfilter[sum;>[;req]]}
-.lunch.generalfilters: ([foods: .lunch.optionalfoodtypes]
-  carbs:   3 # .lunch.generalfilter[.lunch.carbsreq];
-  protein: 3 # .lunch.generalfilter[.lunch.proteinreq];
-  fat:     3 # .lunch.generalfilter[.lunch.fatreq])
+.lunch.generalfilters: .planlib.generalfilters[.lunch.carbsreq;.lunch.proteinreq;.lunch.fatreq;.lunch.optionalfoodtypes]
 
 .lunch.gensolution: {[supplementfood] .planlib.axb_viables[.lunch.mxh_tabulateviables[supplementfood];supplementfood;.lunch.generalfilters supplementfood;`name]}
 .lunch.mxhxs_solution: .lunch.gensolution `lunch_staples
