@@ -113,7 +113,7 @@ For this test, no optimisation is being done, so we check that they
 
 .lunch.price: .planlib.pricesols[.lunch.cost;.lunch.solutions]
 .lunch.ingredients: .lunch.solutions
-.lunch.requiredshops: {exec distinct boughtfrom from .lunch.spending where name in x} each .lunch.solutions
+.lunch.requiredshops: .planlib.shopsrequiredsols[.lunch.spending;.lunch.solutions]
 .lunch.nutritionstats: {exec sum gtotalPserving,sum calsPserving,sum gcarbsPserving,sum gproteinPserving,sum gfatPserving from .lunch.nutrition where name in x} each .lunch.solutions
 
 .lunch.plan: {([]

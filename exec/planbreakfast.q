@@ -35,7 +35,7 @@ breakfast_breads:  .breakfast.categorisednutrition `bread
 
 .breakfast.price: .planlib.pricesols[.breakfast.cost;.breakfast.solutions]
 .breakfast.ingredients: .breakfast.solutions
-.breakfast.requiredshops: {exec distinct boughtfrom from .breakfast.spending where name in x} each .breakfast.solutions
+.breakfast.requiredshops: .planlib.shopsrequiredsols[.breakfast.spending;.breakfast.solutions]
 .breakfast.nutritionstats: {exec sum gtotalPserving,sum calsPserving,sum gcarbsPserving,sum gproteinPserving,sum gfatPserving from .breakfast.nutrition where name in x} each .breakfast.solutions
 
 .breakfast.plan: {([]
