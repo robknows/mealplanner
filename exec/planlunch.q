@@ -30,22 +30,15 @@ Triple the used values for bread nutrition because in a meal I would
   specify that the meal must be valid given that I eat at least 3
   servings (slices, bagels etc..) of the bread.
 
-  The last 2 lines here are just moving name to be the first column
-    solely to satisfy my need for the 'name' column to go first.
+This applies specifically to things which have "bread" in their name,
+  because bagels are much larger than slices of bread, so I probably
+  wouldn't eat 3 or 4 of them.
 
-  This applies specifically to things which have "bread" in their name,
-    because bagels are much larger than slices of bread, so I probably
-    wouldn't eat 3 or 4 of them.
-
-  The code below uses a funtional update.
-    annotatetripled&make3x_aggregates are there to create a dictionary
-    which indicates application of `triple to them.
-
-  The four arguments of the actual update (![`breads;...]) are:
-    `breads                                               :: table name
-    enlist ({0 < count ss[;"bread"] string x} each;`name) :: selection condition ie. only the ones which have 'bread' in their name
-    0b                                                    :: ???
-    make3x_aggregates 1_cols breads                       :: dictionary for the tripling of the numeric columns. (1_ is to leave out 'name')
+The four arguments of the functional update (![`breads;...]) are:
+  `breads                                               :: table name
+  enlist ({0 < count ss[;"bread"] string x} each;`name) :: selection condition ie. only the ones which have 'bread' in their name
+  0b                                                    :: ???
+  make3x_aggregates 1_cols breads                       :: dictionary for the tripling of the numeric columns. (1_ is to leave out 'name')
 
 \
 .lunch.nSlicesPmeal: 4
