@@ -24,7 +24,6 @@ lunch_staples:  .lunch.categorisednutrition `staple
 lunch_breads:   .planlib.triplebreadvalues .lunch.categorisednutrition `bread
 lunch_canneds:  .lunch.categorisednutrition `canned
 
-
 .lunch.optionalfoodtypes: `lunch_staples`lunch_breads`lunch_canneds
 
 /
@@ -51,23 +50,14 @@ Gives a table containing filter functions for the intermediate filtration of
   protein: .lunch.intermediatefilterfunc\:[.lunch.optionalfoodtypes;`protein];
   fat:     .lunch.intermediatefilterfunc\:[.lunch.optionalfoodtypes;`fat])
 
-/
-We must convert the list of viable combinations back into a table to
-  be compared against their corresponding foodtype for validity.
-\
 .lunch.mxh_viables: {[side;field] .planlib.axb_viables[`lunch_meats;`lunch_healthys;.lunch.filters side;field]}
-.lunch.mxh_tabulateviables: {[foodtype]
-  ([]
-    name: .lunch.mxh_viables[foodtype;`name];
-    gtotalPserving: sum each .lunch.mxh_viables[foodtype;`gtotalPserving];
-    calsPserving: sum each .lunch.mxh_viables[foodtype;`calsPserving];
-    gcarbsPserving: sum each .lunch.mxh_viables[foodtype;`gcarbsPserving];
-    gproteinPserving: sum each .lunch.mxh_viables[foodtype;`gproteinPserving];
-    gfatPserving: sum each .lunch.mxh_viables[foodtype;`gfatPserving])}
 
 .lunch.generalfilters: .planlib.generalfilters[.lunch.carbsreq;.lunch.proteinreq;.lunch.fatreq;.lunch.optionalfoodtypes]
 
-.lunch.gensolution: {[supplementfood] .planlib.axb_viables[.lunch.mxh_tabulateviables[supplementfood];supplementfood;.lunch.generalfilters supplementfood;`name]}
+.lunch.gensolution: {[supplementfood]
+  viable_intermediates: .planlib.tabulateviables .lunch.mxh_viables supplementfood;
+  .planlib.axb_viables[viable_intermediates;supplementfood;.lunch.generalfilters supplementfood;`name]}
+
 .lunch.mxhxs_solution: .lunch.gensolution `lunch_staples
 .lunch.mxhxb_solution: .lunch.gensolution `lunch_breads
 .lunch.mxhxc_solution: .lunch.gensolution `lunch_canneds

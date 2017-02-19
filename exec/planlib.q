@@ -34,8 +34,7 @@ planlib_scalebreads: {.planlib.breadslicesPmeal * x}
 /
 Returns the result of AS.FIELD cross BS.FIELD
 \
-.planlib.fieldcross: {[field;as;bs]
-  as[field] cross bs[field]}
+.planlib.fieldcross: {[field;as;bs] as[field] cross bs[field]}
   
 /
 Returns the indices at which L, when flipped and then transformed with
@@ -85,6 +84,15 @@ Returns the names of the 2 food (A and B) combinations that pass all
   axb_proteinpassingindices: filterfunctions[`protein] .planlib.fieldcross[`gproteinPserving;a;b] axb_carbpassingindices;
   axb_fatpassingindices:     filterfunctions[`fat]     .planlib.fieldcross[`gfatPserving;    a;b] axb_proteinpassingindices;
   .planlib.mapFPIs[axb_fatpassingindices;axb_proteinpassingindices;axb_carbpassingindices;a;b;field]}
+
+.planlib.tabulateviables: {[viables]
+  ([]
+    name: viables[`name];
+    gtotalPserving: sum each viables[`gtotalPserving];
+    calsPserving: sum each viables[`calsPserving];
+    gcarbsPserving: sum each viables[`gcarbsPserving];
+    gproteinPserving: sum each viables[`gproteinPserving];
+    gfatPserving: sum each viables[`gfatPserving])}
 
 .planlib.pricesols: {[ftcost;sols] {[ftcost;sol] exec sum pricePserving from ftcost where name in sol}[ftcost] each sols}
 .planlib.shopsrequiredsols: {[ftspending;sols] {[ftspending;sol] exec distinct boughtfrom from ftspending where name in sol}[ftspending] each sols}
