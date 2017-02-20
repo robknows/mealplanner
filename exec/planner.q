@@ -15,7 +15,7 @@ plan: first (.breakfast.plan ; .lunch.plan ; .dinner.plan) where input=meals
 We can introduce a stochastic element here later using a random seed
   as an argument to the planningmethod functions.
 \
-solutions: plan[]
+solutions: 100#(`price xasc plan[])
 
 /
 Fix up the columns with symbols so that they are presentable strings

@@ -35,7 +35,7 @@ dinner_dairys:   .dinner.categorisednutrition `dairy
 
 .dinner.mxh_viables: {[sides;field] .planlib.axb_viables[`dinner_meats;`dinner_healthys;.dinner.filters sides;field]}
 
-.dinner.generalfilters: .planlib.generalfilters[.dinner.carbsreq;.dinner.proteinreq;.dinner.fatreq;enlist each .dinner.options]
+.dinner.generalfilters: .planlib.generalfilters[.dinner.carbsreq;.dinner.proteinreq;.dinner.fatreq;.dinner.options]
 
 .dinner.gensolution: {[sides]
   viable_intermediates: .planlib.tabulateviables .dinner.mxh_viables sides;
