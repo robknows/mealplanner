@@ -68,9 +68,9 @@ Produces a table of filter functions for the given (macro)nutrients
 
 .planlib.filters: {[fts;reqs]
   ([name: fts]
-    carbs:   .planlib.makenutrientfilter[`gcarbsPserving;reqs 0] each fts;
+    carbs:   .planlib.makenutrientfilter[`gcarbsPserving;  reqs 0] each fts;
     protein: .planlib.makenutrientfilter[`gproteinPserving;reqs 1] each fts;
-    fat:     .planlib.makenutrientfilter[`gfatPserving;reqs 2] each fts)}
+    fat:     .planlib.makenutrientfilter[`gfatPserving;    reqs 2] each fts)}
 
 /
 After getting the nested indices of solutions, we must trace back from the FPIS
@@ -86,10 +86,9 @@ To do this it goes from FPIS back into the ppis, selecting only those
   finally it turns these indices into a cross of whatever field you
   choose.          
 \
-.planlib.mapFPIs: {[fpis;p;c;as;bs;field]
-  ppis: p fpis;
-  cpis: c ppis;
-  .planlib.fieldcross[field;as;bs] cpis}
+.planlib.mapFPIs: {[f;p;c;as;bs;field]
+  idxs: c (p f);
+  .planlib.fieldcross[field;as;bs] idxs}
 
 /
 A table of general filters for when no optimisation step is being done
@@ -142,3 +141,10 @@ Returns the names of the 2 food (A and B) combinations that pass all
     gcarbs:        nutritionstats `gcarbsPserving;
     gprotein:      nutritionstats `gproteinPserving;
     gfat:          nutritionstats `gfatPserving)}
+
+.planlib.solution: {[ftspending;ftnutrition;ftcost;solutions]
+  price:          .planlib.pricesols[ftcost;solutions];
+  ingredients:    solutions;
+  requiredshops:  .planlib.shopsrequiredsols[ftspending;solutions];
+  nutritionstats: .planlib.nutritionstats[ftnutrition;solutions];
+  .planlib.solutionstable[price;ingredients;requiredshops;nutritionstats]}

@@ -44,9 +44,4 @@ dinner_dairys:   .dinner.categorisednutrition `dairy
 
 .dinner.solutions: .planlib.concatmap[.dinner.gensolution;.dinner.options]
 
-.dinner.price:          .planlib.pricesols[.dinner.cost;.dinner.solutions]
-.dinner.ingredients:    .dinner.solutions
-.dinner.requiredshops:  .planlib.shopsrequiredsols[.dinner.spending;.dinner.solutions]
-.dinner.nutritionstats: .planlib.nutritionstats[.dinner.nutrition;.dinner.solutions]
-
-.dinner.plan: {.planlib.solutionstable[.dinner.price;.dinner.ingredients;.dinner.requiredshops;.dinner.nutritionstats]}
+.dinner.plan: {.planlib.solution[.dinner.spending;.dinner.nutrition;.dinner.cost;.dinner.solutions]}

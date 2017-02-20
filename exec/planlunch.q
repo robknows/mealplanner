@@ -37,9 +37,4 @@ lunch_canneds:  .lunch.categorisednutrition `canned
 
 .lunch.solutions: .planlib.concatmap[.lunch.gensolution;.lunch.optionalfoodtypes]
 
-.lunch.price:          .planlib.pricesols[.lunch.cost;.lunch.solutions]
-.lunch.ingredients:    .lunch.solutions
-.lunch.requiredshops:  .planlib.shopsrequiredsols[.lunch.spending;.lunch.solutions]
-.lunch.nutritionstats: .planlib.nutritionstats[.lunch.nutrition;.lunch.solutions]
-
-.lunch.plan: {.planlib.solutionstable[.lunch.price;.lunch.ingredients;.lunch.requiredshops;.lunch.nutritionstats]}
+.lunch.plan: {.planlib.solution[.lunch.spending;.lunch.nutrition;.lunch.cost;.lunch.solutions]}
