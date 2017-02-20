@@ -25,30 +25,7 @@ lunch_breads:   .planlib.triplebreadvalues .lunch.categorisednutrition `bread
 lunch_canneds:  .lunch.categorisednutrition `canned
 
 .lunch.optionalfoodtypes: `lunch_staples`lunch_breads`lunch_canneds
-
-/
-Gives a table giving the maximum values for each of the macronutrients
-  for each of the optional foodtypes. I tried using eachboth,
-  but I couldn't make it work... Feelsbadman
-\
-.lunch.macromax: {[table;field] max table[field]}
-.lunch.intermediatereqs: ([foods: .lunch.optionalfoodtypes]
-  carbs:   {.lunch.carbsreq   - .lunch.macromax[x;y]}\:[.lunch.optionalfoodtypes;`gcarbsPserving];
-  protein: {.lunch.proteinreq - .lunch.macromax[x;y]}\:[.lunch.optionalfoodtypes;`gproteinPserving];
-  fat:     {.lunch.fatreq     - .lunch.macromax[x;y]}\:[.lunch.optionalfoodtypes;`gfatPserving])
-
-/
-Gives a table containing filter functions for the intermediate filtration of
-  food combinations that are not going to work, organised by the food type
-  that the meat-healthy pair is being tested against and the 3 macronutrients
-  that form the basis of each test.
-\
-.lunch.checkmacro: {[foodt;macroname;val] val > (.lunch.intermediatereqs foodt)[macroname]}
-.lunch.intermediatefilterfunc: {[foodt;macro] .planlib.macrosfilter[sum;.lunch.checkmacro[foodt;macro]]}
-.lunch.filters: ([foods: .lunch.optionalfoodtypes]
-  carbs:   .lunch.intermediatefilterfunc\:[.lunch.optionalfoodtypes;`carbs];
-  protein: .lunch.intermediatefilterfunc\:[.lunch.optionalfoodtypes;`protein];
-  fat:     .lunch.intermediatefilterfunc\:[.lunch.optionalfoodtypes;`fat])
+.lunch.filters: .planlib.filters[.lunch.optionalfoodtypes;(.lunch.carbsreq;.lunch.proteinreq;.lunch.fatreq)]
 
 .lunch.mxh_viables: {[side;field] .planlib.axb_viables[`lunch_meats;`lunch_healthys;.lunch.filters side;field]}
 

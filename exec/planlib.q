@@ -38,12 +38,31 @@ Returns the result of AS.FIELD cross BS.FIELD
   
 /
 Returns the indices at which L, when flipped and then transformed with
-function TF return true for the predicate REQF.
+  function TF return true for the predicate function REQF, which should
+  take one argument and return 0 or 1.
 \
 .planlib.macrosfilter: {[tf;reqf;l]
   asXbs: tf flip l;
   where reqf asXbs}
-        
+
+/
+Takes a list of lists of food types
+Produces a table of filter functions
+\
+
+.planlib.macromax: {[nutrient;ft] max ft[nutrient]}
+.planlib.makefilter: {[nutrient;req;fts]
+  macromaxfts: sum .planlib.macromax[nutrient] each fts;
+  .planlib.macrosfilter[sum;{z > x - y}[req;macromaxfts]]}
+
+.planlib.makenutrientfilter: {[n;req;fts] .planlib.makefilter[n;req] fts}
+
+.planlib.filters: {[fts;reqs]
+  ([name: fts]
+    carbs:   .planlib.makenutrientfilter[`gcarbsPserving;reqs 0] each fts;
+    protein: .planlib.makenutrientfilter[`gproteinPserving;reqs 1] each fts;
+    fat:     .planlib.makenutrientfilter[`gfatPserving;reqs 2] each fts)}
+
 /
 After getting the nested indices of solutions, we must trace back from the FPIS
   (fatpassingindices) to the names of their corresponding food combination
