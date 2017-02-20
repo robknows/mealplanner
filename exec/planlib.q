@@ -20,10 +20,10 @@ This applies specifically to things which have "bread" in their name,
   wouldn't eat 3 or 4 of them.
 
 The four arguments of the functional update (![`breads;...]) are:
-  `breads                                               :: table name
-  enlist ({0 < count ss[;"bread"] string x} each;`name) :: selection condition ie. only the ones which have 'bread' in their name
-  0b                                                    :: ???
-  make3x_aggregates 1_cols breads                       :: dictionary for the tripling of the numeric columns. (1_ is to leave out 'name')
+  `breads                                               = table name
+  enlist ({0 < count ss[;"bread"] string x} each;`name) = selection condition ie. only the ones which have 'bread' in their name
+  0b                                                    = ???
+  make3x_aggregates 1_cols breads                       = dictionary for the tripling of the numeric columns. (1_ is to leave out 'name')
 \
 .planlib.breadslicesPmeal: 4
 planlib_scalebreads: {.planlib.breadslicesPmeal * x}
@@ -46,13 +46,10 @@ Returns the result of AS.FIELD cross BS.FIELD
     gfatPserving:     .planlib.combine_fields[`gfatPserving;a;b])}
 
 /
-Returns the indices at which L, when flipped and then transformed with
-  function TF return true for the predicate function REQF, which should
-  take one argument and return 0 or 1.
+Returns the indices at which the sum of the items in MACROSLIST 
+  is greater than THRESHHOLD.
 \
-.planlib.macrosfilter: {[tf;reqf;l]
-  asXbs: tf flip l;
-  where reqf asXbs}
+.planlib.macrosidxfilter: {[threshhold;macroslist] where threshhold < sum flip macroslist}
 
 /
 Takes a list of lists of food types (fts)
@@ -62,7 +59,7 @@ Produces a table of filter functions for the given (macro)nutrients
 .planlib.macromax: {[nutrient;ft] max ft[nutrient]}
 .planlib.makefilter: {[nutrient;req;fts]
   macromaxfts: sum .planlib.macromax[nutrient] each fts;
-  .planlib.macrosfilter[sum;{z > x - y}[req;macromaxfts]]}
+  .planlib.macrosidxfilter[req - macromaxfts]}
 
 .planlib.makenutrientfilter: {[n;req;fts] .planlib.makefilter[n;req] fts}
 
@@ -77,13 +74,12 @@ A table of general filters for when no optimisation step is being done
   and you simply want to find the results which pass for a constant
   set of macro requirements
 \
-.planlib.generalfilter: {[req] .planlib.macrosfilter[sum;>[;req]]}
 .planlib.generalfilters: {[carbsreq;proteinreq;fatreq;foods]
   n: count foods;
   ([foods: foods]
-    carbs:   n # .planlib.generalfilter[carbsreq];
-    protein: n # .planlib.generalfilter[proteinreq];
-    fat:     n # .planlib.generalfilter[fatreq])}
+    carbs:   n # .planlib.macrosidxfilter[carbsreq];
+    protein: n # .planlib.macrosidxfilter[proteinreq];
+    fat:     n # .planlib.macrosidxfilter[fatreq])}
 
 /
 After getting the nested indices of solutions, we must trace back from the FPIS

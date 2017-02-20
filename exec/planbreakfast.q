@@ -21,21 +21,10 @@ breakfast_cereals: .breakfast.categorisednutrition `cereal
 breakfast_sides:   .breakfast.categorisednutrition `side
 breakfast_breads:  .breakfast.categorisednutrition `bread
 
-.breakfast.macrosfilter:   {[macroreq] .planlib.macrosfilter[sum;{y > x} macroreq]}
-.breakfast.carbsfilter:   .breakfast.macrosfilter .breakfast.carbsreq
-.breakfast.proteinfilter: .breakfast.macrosfilter .breakfast.proteinreq
-.breakfast.fatfilter:     .breakfast.macrosfilter .breakfast.fatreq
-.breakfast.filters: `carbs`protein`fat!(.breakfast.carbsfilter;.breakfast.proteinfilter;.breakfast.fatfilter)
+.breakfast.options: `breakfast_sides`breakfast_breads
 
-.breakfast.axb_viables: {[a;b] .planlib.axb_viables[a;b;.breakfast.filters;`name]}
-.breakfast.cxb_solution: .breakfast.axb_viables[`breakfast_cereals;`breakfast_breads]
-.breakfast.cxs_solution: .breakfast.axb_viables[`breakfast_cereals;`breakfast_sides]
+.breakfast.filters: .planlib.filters[.breakfast.options;(.breakfast.carbsreq;.breakfast.proteinreq;.breakfast.fatreq)]
 
-.breakfast.solutions: .breakfast.cxb_solution , .breakfast.cxs_solution
+.breakfast.solutions: .planlib.concatmap[{[ft] .planlib.axb_viables[`breakfast_cereals;ft;.breakfast.filters ft;`name]};.breakfast.options]
 
-.breakfast.price:          .planlib.pricesols[.breakfast.cost;.breakfast.solutions]
-.breakfast.ingredients:    .breakfast.solutions
-.breakfast.requiredshops:  .planlib.shopsrequiredsols[.breakfast.spending;.breakfast.solutions]
-.breakfast.nutritionstats: .planlib.nutritionstats[.breakfast.nutrition;.breakfast.solutions]
-
-.breakfast.plan: {.planlib.solutionstable[.breakfast.price;.breakfast.ingredients;.breakfast.requiredshops;.breakfast.nutritionstats]}
+.breakfast.plan: {.planlib.solution[.breakfast.spending;.breakfast.nutrition;.breakfast.cost;.breakfast.solutions]}
