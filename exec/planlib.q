@@ -73,24 +73,6 @@ Produces a table of filter functions for the given (macro)nutrients
     fat:     .planlib.makenutrientfilter[`gfatPserving;    reqs 2] each fts)}
 
 /
-After getting the nested indices of solutions, we must trace back from the FPIS
-  (fatpassingindices) to the names of their corresponding food combination
-  of an element of AS and an element of BS.
-
-C are the carb passing indices
-P are the protein passing indices
-
-To do this it goes from FPIS back into the ppis, selecting only those
-  which passes the fat test, then from ppis back into cpis, again,
-  selecting only those which have passed the first two tests, and then
-  finally it turns these indices into a cross of whatever field you
-  choose.          
-\
-.planlib.mapFPIs: {[f;p;c;as;bs;field]
-  idxs: c (p f);
-  .planlib.fieldcross[field;as;bs] idxs}
-
-/
 A table of general filters for when no optimisation step is being done
   and you simply want to find the results which pass for a constant
   set of macro requirements
@@ -102,6 +84,24 @@ A table of general filters for when no optimisation step is being done
     carbs:   n # .planlib.generalfilter[carbsreq];
     protein: n # .planlib.generalfilter[proteinreq];
     fat:     n # .planlib.generalfilter[fatreq])}
+
+/
+After getting the nested indices of solutions, we must trace back from the FPIS
+  (fatpassingindices) to the names of their corresponding food combination
+  of an element of AS and an element of BS.
+
+CPIS are the carb passing indices
+PPIS are the protein passing indices
+
+To do this it goes from FPIS back into the ppis, selecting only those
+  which passes the fat test, then from ppis back into cpis, again,
+  selecting only those which have passed the first two tests, and then
+  finally it turns these indices into a cross of whatever field you
+  choose.          
+\
+.planlib.mapFPIs: {[fpis;ppis;cpis;as;bs;field]
+  idxs: cpis (ppis fpis);
+  .planlib.fieldcross[field;as;bs] idxs}
 
 /
 Returns the names of the 2 food (A and B) combinations that pass all
