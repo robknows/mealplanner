@@ -35,7 +35,16 @@ planlib_scalebreads: {.planlib.breadslicesPmeal * x}
 Returns the result of AS.FIELD cross BS.FIELD
 \
 .planlib.fieldcross: {[field;as;bs] as[field] cross bs[field]}
-  
+
+.planlib.combine_fields: {[field;a;b] sum each .planlib.fieldcross[field;a;b]}
+.planlib.tabulate_multifoods: {[a;b]
+  ([] name: .planlib.fieldcross[`name;a;b];
+    gtotalPserving:   .planlib.combine_fields[`gtotalPserving;a;b];
+    calsPserving:     .planlib.combine_fields[`calsPserving;a;b];
+    gcarbsPserving:   .planlib.combine_fields[`gcarbsPserving;a;b];
+    gproteinPserving: .planlib.combine_fields[`gproteinPserving;a;b];
+    gfatPserving:     .planlib.combine_fields[`gfatPserving;a;b])}
+
 /
 Returns the indices at which L, when flipped and then transformed with
   function TF return true for the predicate function REQF, which should
@@ -46,8 +55,8 @@ Returns the indices at which L, when flipped and then transformed with
   where reqf asXbs}
 
 /
-Takes a list of lists of food types
-Produces a table of filter functions
+Takes a list of lists of food types (fts)
+Produces a table of filter functions for the given (macro)nutrients
 \
 
 .planlib.macromax: {[nutrient;ft] max ft[nutrient]}
@@ -89,10 +98,11 @@ A table of general filters for when no optimisation step is being done
 \
 .planlib.generalfilter: {[req] .planlib.macrosfilter[sum;>[;req]]}
 .planlib.generalfilters: {[carbsreq;proteinreq;fatreq;foods]
+  n: count foods;
   ([foods: foods]
-    carbs:   3 # .planlib.generalfilter[carbsreq];
-    protein: 3 # .planlib.generalfilter[proteinreq];
-    fat:     3 # .planlib.generalfilter[fatreq])}
+    carbs:   n # .planlib.generalfilter[carbsreq];
+    protein: n # .planlib.generalfilter[proteinreq];
+    fat:     n # .planlib.generalfilter[fatreq])}
 
 /
 Returns the names of the 2 food (A and B) combinations that pass all
@@ -112,6 +122,8 @@ Returns the names of the 2 food (A and B) combinations that pass all
     gcarbsPserving: sum each viables[`gcarbsPserving];
     gproteinPserving: sum each viables[`gproteinPserving];
     gfatPserving: sum each viables[`gfatPserving])}
+
+.planlib.concatmap: {[f;l] over[,;f each l]}
 
 .planlib.pricesols: {[ftcost;sols] {[ftcost;sol] exec sum pricePserving from ftcost where name in sol}[ftcost] each sols}
 .planlib.shopsrequiredsols: {[ftspending;sols] {[ftspending;sol] exec distinct boughtfrom from ftspending where name in sol}[ftspending] each sols}

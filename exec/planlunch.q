@@ -35,11 +35,7 @@ lunch_canneds:  .lunch.categorisednutrition `canned
   viable_intermediates: .planlib.tabulateviables .lunch.mxh_viables supplementfood;
   .planlib.axb_viables[viable_intermediates;supplementfood;.lunch.generalfilters supplementfood;`name]}
 
-.lunch.mxhxs_solution: .lunch.gensolution `lunch_staples
-.lunch.mxhxb_solution: .lunch.gensolution `lunch_breads
-.lunch.mxhxc_solution: .lunch.gensolution `lunch_canneds
-
-.lunch.solutions: .lunch.mxhxs_solution , .lunch.mxhxb_solution , .lunch.mxhxc_solution
+.lunch.solutions: .planlib.concatmap[.lunch.gensolution;.lunch.optionalfoodtypes]
 
 .lunch.price:          .planlib.pricesols[.lunch.cost;.lunch.solutions]
 .lunch.ingredients:    .lunch.solutions
