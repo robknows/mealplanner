@@ -49,7 +49,7 @@ Returns the result of AS.FIELD cross BS.FIELD
 Returns the indices at which the sum of the items in MACROSLIST 
   is greater than THRESHHOLD.
 \
-.planlib.macrosidxfilter: {[threshhold;macroslist] where threshhold < sum flip macroslist}
+.planlib.macrosidxfilter: {[threshhold;macroslist] where threshhold < sum each macroslist}
 
 /
 Takes a list of lists of food types (fts)
@@ -95,19 +95,19 @@ To do this it goes from FPIS back into the ppis, selecting only those
   finally it turns these indices into a cross of whatever field you
   choose.          
 \
-.planlib.mapFPIs: {[fpis;ppis;cpis;as;bs;field]
+.planlib.mapFPIs: {[fpis;ppis;cpis;fttable;field]
   idxs: cpis (ppis fpis);
-  .planlib.fieldcross[field;as;bs] idxs}
+  fttable[field] idxs}
 
 /
 Returns the names of the 2 food (A and B) combinations that pass all
   of the filters specified in the dictionary FILTERFUNCTIONS.
 \
-.planlib.axb_viables: {[a;b;filterfunctions;field]
-  axb_carbpassingindices:    filterfunctions[`carbs]   .planlib.fieldcross[`gcarbsPserving;  a;b];
-  axb_proteinpassingindices: filterfunctions[`protein] .planlib.fieldcross[`gproteinPserving;a;b] axb_carbpassingindices;
-  axb_fatpassingindices:     filterfunctions[`fat]     .planlib.fieldcross[`gfatPserving;    a;b] axb_proteinpassingindices;
-  .planlib.mapFPIs[axb_fatpassingindices;axb_proteinpassingindices;axb_carbpassingindices;a;b;field]}
+.planlib.viables: {[fttable;filterfunctions;field]
+  cpis: filterfunctions[`carbs]   fttable[`gcarbsPserving];
+  ppis: filterfunctions[`protein] fttable[`gproteinPserving] cpis;
+  fpis: filterfunctions[`fat]     fttable[`gfatPserving] (cpis ppis);
+  fttable[field] (cpis ppis fpis)}
 
 .planlib.tabulateviables: {[viables]
   ([]
