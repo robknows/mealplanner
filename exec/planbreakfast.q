@@ -7,8 +7,8 @@ cost: value`:../tables/cost
 .breakfast.foodtypes: `cereal`side`bread
 
 .breakfast.carbsreq: 60
-.breakfast.proteinreq: 13
-.breakfast.fatreq: 2
+.breakfast.proteinreq: 5
+.breakfast.fatreq: 10
 
 .breakfast.spending:  .planlib.spending[`breakfast;.breakfast.foodtypes]
 .breakfast.foodnames: exec name from .breakfast.spending
