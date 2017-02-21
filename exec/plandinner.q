@@ -13,7 +13,7 @@ cost: value`:../tables/cost
 .dinner.spending:          .planlib.spending[`dinner;.dinner.foodtypes]
 .dinner.groupedbyfoodtype: `foodtype xgroup .dinner.spending
 .dinner.foodnames:         exec name from .dinner.spending
-.dinner.nutrition:         select from nutrition where name in .dinner.foodnames
+.dinner.nutrition:         .planlib.triplebreadvalues select from nutrition where name in .dinner.foodnames
 .dinner.cost:              select from cost      where name in .dinner.foodnames
 
 .dinner.categorisednutrition: .planlib.categorisenutrition[.dinner.spending;.dinner.nutrition]
@@ -21,7 +21,7 @@ cost: value`:../tables/cost
 dinner_meats:    .dinner.categorisednutrition `meat
 dinner_healthys: .dinner.categorisednutrition `healthy
 dinner_staples:  .dinner.categorisednutrition `staple
-dinner_breads:   .planlib.triplebreadvalues .dinner.categorisednutrition `bread
+dinner_breads:   .dinner.categorisednutrition `bread
 dinner_canneds:  .dinner.categorisednutrition `canned
 dinner_desserts: .dinner.categorisednutrition `dessert
 dinner_sides:    .dinner.categorisednutrition `side

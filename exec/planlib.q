@@ -29,7 +29,7 @@ The four arguments of the functional update (![`breads;...]) are:
 planlib_scalebreads: {.planlib.breadslicesPmeal * x}
 .planlib.annotatetripled: {(`planlib_scalebreads;x)}
 .planlib.make3x_aggregates: {x ! .planlib.annotatetripled each x}
-.planlib.triplebreadvalues: {[breads] ![breads;enlist ({0 < count ss[;"bread"] string x} each;`name);0b;.planlib.make3x_aggregates 1_cols breads]}
+.planlib.triplebreadvalues: {[foods] ![foods;enlist ({0 < count ss[;"bread"] string x} each;`name);0b;.planlib.make3x_aggregates 1_cols foods]}
 
 /
 Returns the result of AS.FIELD cross BS.FIELD
