@@ -4,6 +4,8 @@ spending: value`:../tables/spending
 givenstats: value`:../tables/givenstats
 nutrition: value`:../tables/nutrition
 
+\l sattr.q
+
 names: exec name from spending
 namesB: exec name from givenstats
 namesC: exec name from nutrition
@@ -18,6 +20,8 @@ cost: ([name:names]
   pricePserving;
   gramsPpound;
   caloriesPpound)
+
+sattr `cost;
 
 save `:../tables/cost
 

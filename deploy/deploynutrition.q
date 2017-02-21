@@ -3,6 +3,8 @@
 spending: value`:../tables/spending
 givenstats: value`:../tables/givenstats
 
+\l sattr.q
+
 names: exec name from spending
 namesB: exec name from givenstats
 
@@ -20,6 +22,8 @@ nutrition: ([name: names]
   gcarbsPserving: gcarbsPservings;
   gproteinPserving: gproteinPservings;
   gfatPserving: gfatPservings)
+
+sattr `nutrition;
 
 save `:../tables/nutrition
 
