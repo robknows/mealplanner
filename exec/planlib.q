@@ -36,8 +36,12 @@ Returns the result of AS.FIELD cross BS.FIELD
 \
 .planlib.fieldcross: {[field;as;bs] as[field] cross bs[field]}
 
+/
+Ensure the first argument to tabulate_multifoods is always a single table.
+\
 .planlib.combine_fields: {[field;a;b] sum each .planlib.fieldcross[field;a;b]}
 .planlib.tabulate_multifoods: {[a;b]
+  if[2 = count b; b:.planlib.tabulate_multifoods[b 0;b 1]];
   ([] name: .planlib.fieldcross[`name;a;b];
     gtotalPserving:   .planlib.combine_fields[`gtotalPserving;a;b];
     calsPserving:     .planlib.combine_fields[`calsPserving;a;b];

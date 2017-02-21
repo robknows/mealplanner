@@ -29,19 +29,19 @@ dinner_dairys:   .dinner.categorisednutrition `dairy
 
 .dinner.optionsA: `dinner_staples`dinner_breads`dinner_canneds
 .dinner.optionsB: `dinner_desserts`dinner_sides`dinner_dairys
-
 .dinner.options: `dinner_staples`dinner_breads`dinner_canneds cross `dinner_desserts`dinner_sides`dinner_dairys
-.dinner.filters: .planlib.filters[.dinner.options;(.dinner.carbsreq;.dinner.proteinreq;.dinner.fatreq)]
 
-.dinner.mxh_viables: {[sides;field] .planlib.axb_viables[`dinner_meats;`dinner_healthys;.dinner.filters sides;field]}
-
+.dinner.filters:        .planlib.filters[.dinner.options;(.dinner.carbsreq;.dinner.proteinreq;.dinner.fatreq)]
 .dinner.generalfilters: .planlib.generalfilters[.dinner.carbsreq;.dinner.proteinreq;.dinner.fatreq;.dinner.options]
 
-.dinner.gensolution: {[sides]
-  viable_intermediates: .planlib.tabulateviables .dinner.mxh_viables sides;
-  tabulate_sides: .planlib.tabulate_multifoods[sides 0;sides 1];
-  .planlib.axb_viables[viable_intermediates;tabulate_sides;.dinner.generalfilters sides;`name]}
+dinner_mxh: .planlib.tabulate_multifoods[`dinner_meats;`dinner_healthys]
 
-.dinner.solutions: .planlib.concatmap[.dinner.gensolution;.dinner.options]
+.dinner.viable_mxhxX: {[option]
+  viable_mxh_names: .planlib.viables[`dinner_mxh;.dinner.filters option; `name];
+  viable_mxhs: select from `dinner_mxh where name in viable_mxh_names;
+  possibilities: .planlib.tabulate_multifoods[viable_mxhs;option];
+  .planlib.viables[possibilities;.dinner.generalfilters option;`name]}
+
+.dinner.solutions: .planlib.concatmap[.dinner.viable_mxhxX;.dinner.options]
 
 .dinner.plan: {.planlib.solution[.dinner.spending;.dinner.nutrition;.dinner.cost;.dinner.solutions]}
