@@ -28,3 +28,9 @@ mealstats: {
   fat:nutritionalinfo[`ft];
   stats:(price;gTotal;cals;carbs;protein;fat);
   `price`gTotal`nCals`gCarbs`gProtein`gFat!stats}
+
+sattr: {[t]
+  c:first cols t;
+  a:`g`u 1=n:count keys t;
+  t:n!@[;c;a#]0!t;
+  t}
