@@ -26,7 +26,7 @@ dinner_canneds:  .dinner.categorisednutrition `canned
 dinner_desserts: .dinner.categorisednutrition `dessert
 dinner_sides:    .dinner.categorisednutrition `side
 dinner_dairys:   .dinner.categorisednutrition `dairy
-
+dinner_mxh:      .planlib.tabulate_multifoods[`dinner_meats;`dinner_healthys]
 .dinner.optionsA: `dinner_staples`dinner_breads`dinner_canneds
 .dinner.optionsB: `dinner_desserts`dinner_sides`dinner_dairys
 .dinner.options: `dinner_staples`dinner_breads`dinner_canneds cross `dinner_desserts`dinner_sides`dinner_dairys
@@ -34,14 +34,6 @@ dinner_dairys:   .dinner.categorisednutrition `dairy
 .dinner.filters:        .planlib.filters[.dinner.options;(.dinner.carbsreq;.dinner.proteinreq;.dinner.fatreq)]
 .dinner.generalfilters: .planlib.generalfilters[.dinner.carbsreq;.dinner.proteinreq;.dinner.fatreq;.dinner.options]
 
-dinner_mxh: .planlib.tabulate_multifoods[`dinner_meats;`dinner_healthys]
-
-.dinner.viable_mxhxX: {[option]
-  viable_mxh_names: .planlib.viables[`dinner_mxh;.dinner.filters option; `name];
-  viable_mxhs: select from `dinner_mxh where name in viable_mxh_names;
-  possibilities: .planlib.tabulate_multifoods[viable_mxhs;option];
-  .planlib.viables[possibilities;.dinner.generalfilters option;`name]}
-
+.dinner.viable_mxhxX: {.planlib.viable_NeededxOption_names[.dinner.filters;.dinner.generalfilters;`dinner_mxh;x]}
 .dinner.solutions: .planlib.concatmap[.dinner.viable_mxhxX;.dinner.options]
-
 .dinner.plan: {.planlib.solution[.dinner.spending;.dinner.nutrition;.dinner.cost;.dinner.solutions]}

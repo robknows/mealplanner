@@ -23,20 +23,12 @@ lunch_healthys: .lunch.categorisednutrition `healthy
 lunch_staples:  .lunch.categorisednutrition `staple
 lunch_breads:   .planlib.triplebreadvalues .lunch.categorisednutrition `bread
 lunch_canneds:  .lunch.categorisednutrition `canned
-
+lunch_mxh:      .planlib.tabulate_multifoods[`lunch_meats;`lunch_healthys]
 .lunch.options: `lunch_staples`lunch_breads`lunch_canneds
 
 .lunch.filters:        .planlib.filters[.lunch.options;(.lunch.carbsreq;.lunch.proteinreq;.lunch.fatreq)]
 .lunch.generalfilters: .planlib.generalfilters[.lunch.carbsreq;.lunch.proteinreq;.lunch.fatreq;.lunch.options]
 
-lunch_mxh: .planlib.tabulate_multifoods[`lunch_meats;`lunch_healthys]
-
-.lunch.viable_mxhxX: {[option]
-  viable_mxh_names: .planlib.viables[`lunch_mxh;.lunch.filters option; `name];
-  viable_mxhs: select from `lunch_mxh where name in viable_mxh_names;
-  possibilities: .planlib.tabulate_multifoods[viable_mxhs;option];
-  .planlib.viables[possibilities;.lunch.generalfilters option;`name]}
-
+.lunch.viable_mxhxX: {.planlib.viable_NeededxOption_names[.lunch.filters;.lunch.generalfilters;`lunch_mxh;x]}
 .lunch.solutions: .planlib.concatmap[.lunch.viable_mxhxX;.lunch.options]
-
 .lunch.plan: {.planlib.solution[.lunch.spending;.lunch.nutrition;.lunch.cost;.lunch.solutions]}

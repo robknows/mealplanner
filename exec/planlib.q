@@ -122,6 +122,12 @@ Returns the names of the 2 food (A and B) combinations that pass all
     gproteinPserving: sum each viables[`gproteinPserving];
     gfatPserving: sum each viables[`gfatPserving])}
 
+.planlib.viable_NeededxOption_names: {[intermediatefilters;generalfilters;needed;option]
+  viable_needed_names: .planlib.viables[needed;intermediatefilters option; `name];
+  viable_neededs: select from needed where name in viable_needed_names;
+  possibilities: .planlib.tabulate_multifoods[viable_neededs;option];
+  .planlib.viables[possibilities;generalfilters option;`name]}
+
 .planlib.concatmap: {[f;l] over[,;f each l]}
 
 .planlib.pricesols: {[ftcost;sols] {[ftcost;sol] exec sum pricePserving from ftcost where name in sol}[ftcost] each sols}
