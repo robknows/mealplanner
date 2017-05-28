@@ -1,6 +1,9 @@
 #!/bin/bash
 
+cd dataEntry/
 ./enterData.py
+mv insertFoods.q ../insertFoods.q
+cd ..
 cat insertFoods.q
 while true; do
   read -p "Do you want to continue? (s = show generated q file again, y = yes, n = no)." yn

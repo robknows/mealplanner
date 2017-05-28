@@ -1,4 +1,7 @@
 #!/usr/bin/python3
+
+# This ought to be used via the top level bash script of the same name.
+
 fields = ["name", "shop", "price", "nServings", "servingDesc", "inmeals", "foodtype", "nGrams", "cals", "carbs", "protein", "fat"]
 data = ["-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"]
 
