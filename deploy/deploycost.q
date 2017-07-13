@@ -15,11 +15,13 @@ if[not {&[x = y;y = z]}[count names;count namesB;count namesC]; 1 "spending, giv
 pricePserving: exec price%nServings from spending
 gramsPpound: (exec nGrams from givenstats) % (exec price from spending)
 caloriesPpound: (exec reciprocal price from spending) * 0.01 * exec calsP100g * nGrams from givenstats
+proteinPpound: (exec reciprocal price from spending) * 0.01 * exec gproteinP100g * nGrams from givenstats
 
 cost: ([name:names]
   pricePserving;
   gramsPpound;
-  caloriesPpound)
+  caloriesPpound;
+  proteinPpound)
 
 sattr `cost;
 
