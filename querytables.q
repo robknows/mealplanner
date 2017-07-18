@@ -4,6 +4,7 @@ spending: value`:tables/spending
 givenstats: value`:tables/givenstats
 nutrition: value`:tables/nutrition
 cost: value`:tables/cost
+mymeals:value`:tables/mymeals
 
 \l deploy/sattr.q
 
