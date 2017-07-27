@@ -1,4 +1,4 @@
-#!/home/ubuntu/q/l32/q
+#!/home/rob/q/l32/q
 
 spending: value`:../tables/spending
 givenstats: value`:../tables/givenstats
